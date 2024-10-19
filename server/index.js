@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(auth);
 app.use(routes);
-app.use("/orders", orderController); // is this the right place for this?
+app.use("/orders", orderController);
 
 initDatabase(config.DB_CONNECTION_STRING)
   .then(() => {
