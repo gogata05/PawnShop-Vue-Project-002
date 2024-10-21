@@ -75,4 +75,39 @@ router.get("/logout", isAuth, (req, res) => {
   }
 });
 
+router.put("/profile/:id", isAuth, async (req, res) => {
+  try {
+    const { firstName, lastName, email, currentPassword, password } = req.body;
+    const userId = req.params.id;
+
+    let user = await authServices.getUserById(userId);
+
+    const isValidPassword = await user.validatePassword(currentPassword);
+
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    if (email) user.email = email;
+    if (password) user.password = password;
+
+    await user.save();
+
+    res.json({ message: "Profile updated successfully." });
+  } catch (error) {
+    res.status(400).json({ error: errorHandler(error) });
+  }
+});
+
+router.get("/profile/:id", isAuth, async (req, res) => {
+  try {
+    let userData = await getUserById(req.params.id);
+    res.json({
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      favorites: userData.favorites
+    });
+  } catch (error) {
+    res.status(401).json({ error: errorHandler(error) });
+  }
+});
 module.exports = router;
