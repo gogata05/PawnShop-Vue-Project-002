@@ -59,6 +59,36 @@ const edit = (productId, brand, model, description, imgUrl, condition, year, pri
     { runValidators: true }
   );
 
+const comment = async (productId, comment) => {
+  let product = await getOne(productId);
+  let addComments = product.comments;
+  addComments.unshift(comment);
+  await Product.updateOne(
+    { _id: productId },
+    {
+      comments: addComments
+    },
+    { runValidators: true }
+  );
+};
+
+const getLatest = (n = 3) => Product.find({}).sort({ _id: -1 }).limit(n).populate("creator").populate("votes");
+
+const search = async ({ filters, page, limit, sortBy, sortOrder }) => {
+  const skip = (page - 1) * limit;
+  const total = await Product.countDocuments(filters);
+  const pages = Math.ceil(total / limit);
+
+  const products = await Product.find(filters)
+    .sort({ [sortBy]: sortOrder })
+    .skip(skip)
+    .limit(limit)
+    .populate("creator")
+    .populate("votes");
+
+  return { products, total, page, pages };
+};
+
 const productServices = {
   create,
   getAll,
@@ -66,10 +96,11 @@ const productServices = {
   deleteRecord,
   getTop10,
   voteUp,
-  favorite,
   voteDown,
+  favorite,
   edit,
   comment,
-  getLatest
+  getLatest,
+  search
 };
 module.exports = productServices;
