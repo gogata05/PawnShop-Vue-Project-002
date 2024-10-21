@@ -127,6 +127,8 @@ router.get("/vote-up/:id", isAuth, async (req, res) => {
   try {
     if (!(product.creator._id.toString() === req.user._id) && !product.votes.find(x => x._id.toString() === req.user._id)) {
       await productServices.voteUp(productId, req.user._id);
+
+      res.json({ message: "Product liked" });
     } else {
       res.status(403).json({ error: "You are not allowed to like/dislike this product!" });
     }
@@ -140,7 +142,9 @@ router.get("/vote-down/:id", isAuth, async (req, res) => {
   let product = await productServices.getOne(req.params.id);
   try {
     if (!(product.creator._id.toString() === req.user._id) && !product.votes.find(x => x._id.toString() === req.user._id)) {
-      await productServices.voteDown(productId);
+      await productServices.voteDown(productId, req.user._id);
+
+      res.json({ message: "Product disliked!" });
     } else {
       res.status(403).json({ error: "You are not allowed to like/dislike this product!" });
     }
@@ -214,7 +218,6 @@ router.get("/search", async (req, res) => {
       filters.$or = [{ brand: new RegExp(q, "i") }, { model: new RegExp(q, "i") }, { description: new RegExp(q, "i") }, { productType: new RegExp(q, "i") }];
     }
 
-    // Добавяне на допълнителни филтри, ако са предоставени
     if (brand) {
       filters.brand = brand;
     }
@@ -244,7 +247,8 @@ router.get("/search", async (req, res) => {
 
     res.json({ products: products.products, total: products.total, page: products.page, pages: products.pages });
   } catch (error) {
-    res.status(400).json({ error: "Грешка при търсенето на продукти." });
+    console.error(error);
+    res.status(400).json({ error: "Error while searching" });
   }
 });
 
