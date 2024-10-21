@@ -81,8 +81,14 @@ router.put("/profile/:id", isAuth, async (req, res) => {
     const userId = req.params.id;
 
     let user = await authServices.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found!" });
+    }
 
     const isValidPassword = await user.validatePassword(currentPassword);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: "Current password is incorrect!" });
+    }
 
     if (firstName) user.firstName = firstName;
     if (lastName) user.lastName = lastName;
