@@ -25,11 +25,47 @@
         </li>
       </ul>
     </nav>
+
+    <!-- Profile Dropdown -->
+    <div class="welcome" v-if="isAuthenticated" ref="container" @click="toggleDropdown" tabindex="0">
+      <span>Welcome, </span>
+      <span class="email">{{ email }}</span>
+      <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+      </svg>
+
+      <!-- Dropdown Menu -->
+      <ul v-if="showDropdown" class="dropdown-menu" @click.stop>
+        <li>
+          <router-link :to="{ name: 'Profile' }">My Favourites</router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Orders' }">My Orders</router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'Cart' }">My Cart</router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'AddProduct' }">Add a Product</router-link>
+        </li>
+        <li>
+          <router-link :to="{ name: 'ManageAccount' }">Manage Account</router-link>
+        </li>
+        <li>
+          <a @click.prevent="handleLogout" href="javascript:void(0);">Logout</a>
+        </li>
+      </ul>
+    </div>
+    <div class="cart-icon" @click="goToCart">
+      <font-awesome-icon :icon="['fas', 'shopping-cart']" :style="{ color: isCartPage ? 'purple' : 'white' }" />
+      <span v-if="itemCount > 0" class="item-count">{{ itemCount }}</span>
+    </div>
   </header>
 </template>
 
 <script>
 import { useUserStore } from "../store/userStore";
+import { useCartStore } from "../store/cartStore";
 import { logoutUser } from "../dataProviders/auth";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -37,6 +73,7 @@ import { useRouter, useRoute } from "vue-router";
 export default {
   setup() {
     const userStore = useUserStore();
+    const cartStore = useCartStore();
     const router = useRouter();
     const route = useRoute();
     const showDropdown = ref(false);
@@ -66,6 +103,7 @@ export default {
 
     const isAuthenticated = computed(() => userStore.isAuthenticated);
     const email = computed(() => userStore.email);
+    const itemCount = computed(() => cartStore.itemCount);
     const isCartPage = computed(() => route.name === "Cart");
 
     const redirectToHome = () => {
@@ -78,6 +116,10 @@ export default {
       router.push("/user/login");
     };
 
+    const goToCart = () => {
+      router.push({ name: "Cart" });
+    };
+
     return {
       showDropdown,
       toggleDropdown,
@@ -86,6 +128,9 @@ export default {
       email,
       redirectToHome,
       handleLogout,
+      cartStore,
+      itemCount,
+      goToCart,
       isCartPage
     };
   }
@@ -175,5 +220,21 @@ header nav ul {
   font-weight: 500;
   letter-spacing: 2.5px;
   cursor: pointer;
+}
+.cart-icon {
+  position: relative;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.item-count {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  font-size: 0.8rem;
 }
 </style>
