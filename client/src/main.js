@@ -11,9 +11,9 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import CollapsibleItem from "../src/components/CollapsibleItem.vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faShoppingCart, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faShoppingCart, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -22,7 +22,7 @@ const pinia = createPinia();
 library.add(faShoppingCart, faPlus, faMinus);
 
 // Регистриране на FontAwesome компонента
-app.component('font-awesome-icon', FontAwesomeIcon);
+app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(router);
 app.use(pinia);
@@ -32,7 +32,7 @@ userStore.getPersistedProfile();
 
 app.use(VueGoogleMaps, {
   load: {
-    key: "AIzaSyCfdy2keDRAnX2JJLw9WwIISXpheNlFHVA"
+    key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY
   }
 });
 

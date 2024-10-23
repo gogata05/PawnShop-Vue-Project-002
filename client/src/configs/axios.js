@@ -2,8 +2,8 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000", // Заменете PORT с вашия порт
-  withCredentials: true // Добавено за изпращане на бисквитките
+  baseURL: process.env.VUE_APP_BASE_URL || "http://localhost:5000", // Use the environment variable for the base URL
+  withCredentials: true // Added for sending cookies
 });
 
 export default axiosInstance;
