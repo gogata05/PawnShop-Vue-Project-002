@@ -5,13 +5,18 @@ import { useUserStore } from "../store/userStore";
 import { addProduct } from "../dataProviders/products";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength, minValue, helpers } from "@vuelidate/validators";
+import Alert from "../components/Alert.vue";
+// Импортиране на useToast
+import { useToast } from "vue-toastification";
 
 const validateLink = value => /^https?:\/\//i.test(value);
 
 export default {
+  components: { Alert },
   setup() {
     const userStore = useUserStore();
-    return { userStore, v$: useVuelidate() };
+    const toast = useToast(); // Инициализиране на toast
+    return { userStore, v$: useVuelidate(), toast };
   },
   data() {
     return {
@@ -28,21 +33,29 @@ export default {
           creator: this.userStore.id
         }
       },
-      isLoading: false
+      isLoading: false,
+      backendError: null,
+      errorNotification: false
     };
   },
   methods: {
     async onSubmit() {
+      this.errorNotification = false;
       const isValid = await this.v$.$validate();
 
       if (isValid) {
         this.isLoading = true;
         let productData = await addProduct(this.productData.product);
 
-        if (!productData.error) {
+        if (productData.error) {
+          this.backendError = productData.error;
+          this.errorNotification = true;
+          this.isLoading = false;
+        } else {
+          this.toast.success("The Product is created successfully"); // Добавен тост
           this.$router.push("/all-products");
+          this.isLoading = false;
         }
-        this.isLoading = false;
       }
     }
   },
@@ -73,6 +86,7 @@ export default {
 
 <template>
   <section id="addProduct" class="fix">
+    <Alert v-if="errorNotification" :alert="backendError"></Alert>
     <form @submit.prevent="onSubmit" class="container">
       <h3>Add a Product</h3>
 
