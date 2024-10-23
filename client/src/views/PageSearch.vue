@@ -42,6 +42,25 @@
           <input type="number" v-model.number="filters.priceMax" placeholder="Max" />
         </label>
       </div>
+
+      <div class="sort">
+        <label>
+          Sort By:
+          <select v-model="sortBy">
+            <option value="createdAt">Newest</option>
+            <option value="price">Price</option>
+            <option value="rating">Rating</option>
+          </select>
+        </label>
+        <label>
+          Order:
+          <select v-model="order">
+            <option value="desc">Descending</option>
+            <option value="asc">Ascending</option>
+          </select>
+        </label>
+      </div>
+
       <button @click="resetFilters">Reset Filters</button>
     </section>
 
