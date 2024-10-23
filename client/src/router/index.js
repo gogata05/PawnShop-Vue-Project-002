@@ -5,6 +5,11 @@ const PageHome = () => import("../views/PageHome.vue");
 const PageLogin = () => import("../views/PageLogin.vue");
 const PageRegister = () => import("../views/PageRegister.vue");
 const PageNotFound = () => import("../views/PageNotFound.vue");
+const PageAddProduct = () => import("../views/PageAddProduct.vue");
+const PageFindUs = () => import("../views/PageFindUs.vue");
+const PageProducts = () => import("../views/PageProducts.vue");
+const PageHelp = () => import("../views/PageHelp.vue");
+
 
 function validateUser() {
   const userStore = useUserStore();
@@ -16,6 +21,44 @@ const routes = [
     path: "/",
     component: PageHome,
     name: "Home"
+  },
+  {
+    path: "/all-products",
+    component: PageProducts,
+    name: "AllProducts"
+  },
+  {
+    path: "/top-10",
+    component: PageProducts,
+    name: "Top10"
+  },
+  {
+    path: "/add",
+    component: PageAddProduct,
+    name: "AddProduct",
+    beforeEnter: validateUser
+  },
+  {
+    path: "/find-us",
+    name: "FindUs",
+    component: PageFindUs
+  },
+  {
+    path: "/user/login",
+    component: PageLogin,
+    name: "Login",
+    beforeEnter: isLoggedIn
+  },
+  {
+    path: "/user/register",
+    component: PageRegister,
+    name: "Register",
+    beforeEnter: isLoggedIn
+  },
+  {
+    path: "/help",
+    component: PageHelp,
+    name: "Help"
   },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
