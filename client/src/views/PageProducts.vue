@@ -2,6 +2,7 @@
 <script>
 import { getProducts } from "../dataProviders/products";
 import Loader from "../components/Loader.vue";
+import starsGenerator from "../helpers/starsGenerator";
 
 export default {
   components: { Loader },
@@ -23,6 +24,7 @@ export default {
     async loadData() {
       this.isLoading = true;
       this.allProducts = await getProducts(window.location.href.split("/").pop());
+      this.allProducts.products.forEach(e => (e.stars = starsGenerator(e.rating)));
       this.allProducts.products.forEach(e => (e.description = e["description"].length > 160 ? e["description"].substring(0, 160) + "..." : e["description"]));
       this.isLoading = false;
     }
@@ -40,6 +42,7 @@ export default {
     <div v-else v-for="product of allProducts.products" :key="product._id" class="productd">
       <div class="productText">
         <h3>{{ product["brand"] }} {{ product["model"] }}</h3>
+        <span class="stars"> {{ product["stars"] }}</span>
         <span
           ><b>{{ product["year"] }}, {{ product["productType"] }}, {{ product["condition"] }}, {{ product["price"] }} EURO</b></span
         >
@@ -128,5 +131,10 @@ export default {
   background: rgb(31, 135, 45);
   color: #fff;
   cursor: pointer;
+}
+
+.stars {
+  margin-bottom: 0.25rem;
+  margin-top: -0.25rem;
 }
 </style>
