@@ -10,6 +10,7 @@ const PageFindUs = () => import("../views/PageFindUs.vue");
 const PageProducts = () => import("../views/PageProducts.vue");
 const PageHelp = () => import("../views/PageHelp.vue");
 const PageSearch = () => import("../views/PageSearch.vue");
+const PageProductDetails = () => import("../views/PageProductDetails.vue");
 
 function validateUser() {
   const userStore = useUserStore();
@@ -64,6 +65,11 @@ const routes = [
     path: "/search",
     component: PageSearch,
     name: "Search"
+  },
+  {
+    path: "/product/:id",
+    component: PageProductDetails,
+    name: "ProductDetails"
   },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
