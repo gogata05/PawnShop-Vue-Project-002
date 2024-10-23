@@ -1,11 +1,13 @@
 <!-- client\src\views\PageProductDetails.vue -->
 <script>
-import { getProduct, deleteProduct, favoriteProduct } from "../dataProviders/products";
+import { getProduct, deleteProduct, likeProduct, dislikeProduct, favoriteProduct, comment } from "../dataProviders/products";
+import { getProfile } from "../dataProviders/auth";
 import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
 import { useUserStore } from "../store/userStore";
 import { mapState } from "pinia";
 import { useToast } from "vue-toastification";
+import { useCartStore } from "../store/cartStore"; // Добавено импортиране
 
 export default {
   components: { Loader },
@@ -18,6 +20,8 @@ export default {
     return {
       productData: {},
       isLoading: true,
+      userData: { comment: "" },
+      quantity: 1 // Добавено поле за количество
     };
   },
   async created() {
@@ -45,10 +49,31 @@ export default {
         this.$router.push("/all-products");
       }
     },
+    async likeProduct() {
+      await likeProduct(this.productData.product._id);
+      this.productData.product.rating++;
+      this.productData.voted = true;
+    },
+    async dislikeProduct() {
+      await dislikeProduct(this.productData.product._id);
+      this.productData.product.rating--;
+      this.productData.voted = true;
+    },
     async favoriteProduct() {
       await favoriteProduct(this.productData.product._id);
       this.productData.isInFavorites = true;
     },
+    async comment() {
+      await comment(this.productData.product._id, this.userData);
+      let user = await getProfile();
+      this.productData.product.comments.unshift(`${user.firstName} ${user.lastName}: ${this.userData.comment}`);
+      this.userData.comment = "";
+    },
+    addToCart() {
+      const cartStore = useCartStore();
+      cartStore.addToCart(this.productData.product, this.quantity);
+      this.toast.success("Product added to cart!");
+    }
   },
   computed: {
     ...mapState(useUserStore, ["isAuthenticated"]),
@@ -502,4 +527,3 @@ button,
   flex: 1;
 }
 </style>
-

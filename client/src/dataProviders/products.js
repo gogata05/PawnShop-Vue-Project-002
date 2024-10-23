@@ -49,3 +49,23 @@ export async function deleteProduct(id) {
     return null;
   }
 }
+
+export async function likeProduct(id) {
+  try {
+    const res = await axiosInstance.get(`/vote-up/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+export async function dislikeProduct(id) {
+  try {
+    const res = await axiosInstance.get(`/vote-down/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
