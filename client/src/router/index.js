@@ -14,6 +14,7 @@ const PageProductDetails = () => import("../views/PageProductDetails.vue");
 const PageEditProduct = () => import("../views/PageEditProduct.vue");
 const PageUserProfile = () => import("../views/PageUserProfile.vue");
 const PageManageAccount = () => import("../views/PageManageAccount.vue");
+const PageCart = () => import("../views/PageCart.vue");
 function validateUser() {
   const userStore = useUserStore();
   return userStore.isAuthenticated ? userStore.isAuthenticated : { path: "/user/login" };
@@ -89,6 +90,12 @@ const routes = [
     path: "/manage-account",
     component: PageManageAccount,
     name: "ManageAccount",
+    beforeEnter: validateUser
+  },
+  {
+    path: "/cart",
+    component: PageCart,
+    name: "Cart",
     beforeEnter: validateUser
   },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
