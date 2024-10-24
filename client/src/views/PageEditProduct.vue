@@ -3,12 +3,16 @@
 import { editProduct, getProduct } from "../dataProviders/products";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength, minValue, helpers } from "@vuelidate/validators";
+import Alert from "../components/Alert.vue";
+import { useToast } from "vue-toastification";
 
 const validateLink = value => /^https?:\/\//i.test(value);
 
 export default {
+  components: { Alert },
   setup() {
-    return { v$: useVuelidate() };
+    const toast = useToast();
+    return { toast, v$: useVuelidate() };
   },
   data() {
     return {
@@ -26,7 +30,8 @@ export default {
         }
       },
       isLoading: false,
-      backendError: null
+      backendError: null,
+      errorNotification: false
     };
   },
   async created() {
@@ -44,6 +49,7 @@ export default {
       this.isLoading = false;
     },
     async onSubmit() {
+      this.errorNotification = false;
       const isValid = await this.v$.$validate();
 
       if (isValid) {
@@ -52,9 +58,12 @@ export default {
 
         if (productData.error) {
           this.backendError = productData.error;
+          this.errorNotification = true;
           this.isLoading = false;
+          this.toast.error("Failed to edit product!");
         } else {
           this.isLoading = false;
+          this.toast.success("Product edited successfully!");
           this.$router.push(`/details/${this.productData.product._id}`);
         }
       }
@@ -74,7 +83,7 @@ export default {
           year: { required, minValue: minValue(0) },
           description: { required, minLength: minLength(8) },
           condition: { required },
-          price: { required, minValue: minValue(0) }
+          price: { required, minminValue: minValue(0) }
         }
       }
     };
@@ -84,6 +93,7 @@ export default {
 
 <template>
   <section id="editProduct" class="fix">
+    <Alert v-if="errorNotification" :alert="backendError"></Alert>
     <form @submit.prevent="onSubmit" class="container">
       <h3>Edit a Product</h3>
 
@@ -184,3 +194,88 @@ export default {
     </form>
   </section>
 </template>
+
+<style scoped>
+.error-msg {
+  color: #dc3545;
+  font-size: 16px;
+}
+
+form .error {
+  border: 2px solid #dc3545;
+}
+h3 {
+  font-size: xx-large;
+  padding-bottom: 2%;
+  margin-top: -2%;
+}
+.container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.brand-model {
+  display: flex;
+  justify-content: space-between;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn {
+  background-color: rgb(7, 74, 198);
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 2%;
+}
+
+.btn:hover {
+  background-color: rgb(49, 98, 189);
+}
+.brand-model {
+  display: flex;
+  justify-content: space-between;
+}
+
+.brand-model .form-group {
+  flex: 0 0 48%;
+  margin-bottom: 10px;
+}
+.fix {
+  padding-top: 70px;
+  padding-bottom: 70px;
+  margin: auto;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  width: 100vh;
+}
+
+.fix::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.3;
+  z-index: -1;
+}
+</style>
