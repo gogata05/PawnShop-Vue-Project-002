@@ -63,10 +63,20 @@ export default {
     onMounted(async () => {
       // Заредете текущите данни на потребителя
       const profile = await getProfile();
+      if (profile) {
+        form.value.firstName = profile.firstName;
+        form.value.lastName = profile.lastName;
+        form.value.email = profile.email;
+        originalEmail.value = profile.email; // Съхранете оригиналния имейл
+      }
     });
 
     const updateAccount = async () => {
       // Проверка на текущата парола
+      if (!form.value.currentPassword) {
+        error.value = "Current password is required!";
+        return;
+      }
 
       // Проверка на новата парола и потвърждение
       if (form.value.newPassword || form.value.confirmPassword) {
@@ -76,6 +86,14 @@ export default {
         }
       }
 
+      try {
+        const response = await axiosInstance.put(`/users/profile/${userStore.id}`, {
+          firstName: form.value.firstName,
+          lastName: form.value.lastName,
+          email: form.value.email,
+          currentPassword: form.value.currentPassword, // Изпращане на текущата парола
+          ...(form.value.newPassword && { password: form.value.newPassword }) // Опционално нова парола
+        });
         message.value = response.data.message;
         error.value = "";
 
@@ -83,6 +101,15 @@ export default {
         const isEmailChanged = form.value.email !== originalEmail.value;
         const isPasswordChanged = !!form.value.newPassword;
 
+        if (isEmailChanged || isPasswordChanged) {
+          userStore.logout();
+          await logoutUser(); // Изчистете токена от сървъра
+          router.push("/user/login"); // Използвайте router вместо this.$router
+        }
+      } catch (err) {
+        error.value = err.response.data.error || "An error occurred.";
+        message.value = "";
+      }
     };
 
     return {
