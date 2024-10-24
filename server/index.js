@@ -1,4 +1,5 @@
 // server\index.js
+require("dotenv").config(); // Добавете това
 const cookieParser = require("cookie-parser");
 const config = require("./config/config")[process.env.NODE_ENV];
 const express = require("express");
@@ -15,9 +16,9 @@ app.use(auth);
 app.use(routes);
 app.use("/orders", orderController);
 
-initDatabase(config.DB_CONNECTION_STRING)
+initDatabase(process.env.DB_CONNECTION_STRING) // Променете тук
   .then(() => {
-    app.listen(config.PORT, console.log(`Listening at http://localhost:${config.PORT}`));
+    app.listen(process.env.PORT, console.log(`Listening at http://localhost:${process.env.PORT}`)); // Променете тук
   })
   .catch(err => {
     console.error(err);
