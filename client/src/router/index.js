@@ -11,6 +11,7 @@ const PageProducts = () => import("../views/PageProducts.vue");
 const PageHelp = () => import("../views/PageHelp.vue");
 const PageSearch = () => import("../views/PageSearch.vue");
 const PageProductDetails = () => import("../views/PageProductDetails.vue");
+const PageEditProduct = () => import("../views/PageEditProduct.vue");
 
 function validateUser() {
   const userStore = useUserStore();
@@ -70,6 +71,12 @@ const routes = [
     path: "/product/:id",
     component: PageProductDetails,
     name: "ProductDetails"
+  },
+  {
+    path: "/edit/:id",
+    component: PageEditProduct,
+    name: "EditProduct",
+    beforeEnter: validateUser
   },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
