@@ -32,7 +32,7 @@ userStore.getPersistedProfile();
 
 app.use(VueGoogleMaps, {
   load: {
-    key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY
+    key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   }
 });
 

@@ -5,22 +5,28 @@ const PageHome = () => import("../views/PageHome.vue");
 const PageLogin = () => import("../views/PageLogin.vue");
 const PageRegister = () => import("../views/PageRegister.vue");
 const PageNotFound = () => import("../views/PageNotFound.vue");
+const PageUserProfile = () => import("../views/PageUserProfile.vue");
 const PageAddProduct = () => import("../views/PageAddProduct.vue");
+const PageEditProduct = () => import("../views/PageEditProduct.vue");
 const PageFindUs = () => import("../views/PageFindUs.vue");
 const PageProducts = () => import("../views/PageProducts.vue");
+const PageProductDetails = () => import("../views/PageProductDetails.vue");
 const PageHelp = () => import("../views/PageHelp.vue");
 const PageSearch = () => import("../views/PageSearch.vue");
-const PageProductDetails = () => import("../views/PageProductDetails.vue");
-const PageEditProduct = () => import("../views/PageEditProduct.vue");
-const PageUserProfile = () => import("../views/PageUserProfile.vue");
 const PageManageAccount = () => import("../views/PageManageAccount.vue");
+
 const PageCart = () => import("../views/PageCart.vue");
-const PageOrders = () => import("../views/PageOrders.vue");
 const PageSuccess = () => import("../views/PageSuccess.vue");
+const PageOrders = () => import("../views/PageOrders.vue");
 
 function validateUser() {
   const userStore = useUserStore();
   return userStore.isAuthenticated ? userStore.isAuthenticated : { path: "/user/login" };
+}
+
+function isLoggedIn() {
+  const userStore = useUserStore();
+  return userStore.isAuthenticated ? { path: "/user/profile" } : true;
 }
 
 const routes = [
@@ -51,6 +57,19 @@ const routes = [
     component: PageFindUs
   },
   {
+    path: "/details/:id",
+    component: PageProductDetails,
+    name: "ProductDetails",
+    children: [
+      {
+        path: "edit",
+        component: PageEditProduct,
+        name: "EditProduct",
+        beforeEnter: validateUser
+      }
+    ]
+  },
+  {
     path: "/user/login",
     component: PageLogin,
     name: "Login",
@@ -63,6 +82,12 @@ const routes = [
     beforeEnter: isLoggedIn
   },
   {
+    path: "/user/profile",
+    component: PageUserProfile,
+    name: "Profile",
+    beforeEnter: validateUser
+  },
+  {
     path: "/help",
     component: PageHelp,
     name: "Help"
@@ -73,24 +98,7 @@ const routes = [
     name: "Search"
   },
   {
-    path: "/product/:id",
-    component: PageProductDetails,
-    name: "ProductDetails"
-  },
-  {
-    path: "/edit/:id",
-    component: PageEditProduct,
-    name: "EditProduct",
-    beforeEnter: validateUser
-  },
-  {
-    path: "/user/profile",
-    component: PageUserProfile,
-    name: "UserProfile",
-    beforeEnter: validateUser
-  },
-  {
-    path: "/manage-account",
+    path: "/user/manage-account",
     component: PageManageAccount,
     name: "ManageAccount",
     beforeEnter: validateUser
@@ -102,15 +110,16 @@ const routes = [
     beforeEnter: validateUser
   },
   {
-    path: "/orders",
-    component: PageOrders,
-    name: "Orders",
+    path: "/success",
+    component: PageSuccess,
+    name: "Success",
     beforeEnter: validateUser
   },
   {
-    path: "/success",
-    component: PageSuccess,
-    name: "Success"
+    path: "/user/orders",
+    component: PageOrders,
+    name: "Orders",
+    beforeEnter: validateUser
   },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
