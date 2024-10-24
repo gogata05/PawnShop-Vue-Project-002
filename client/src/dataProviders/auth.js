@@ -20,3 +20,14 @@ export async function logoutUser() {
     return null;
   }
 }
+
+export async function getProfile() {
+  try {
+    const id = localStorage.getItem("id");
+    const res = await axiosInstance.get(`/users/profile/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
