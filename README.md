@@ -2,6 +2,11 @@
 
 SoftUni Project Defense
 
+How to Start:
+1."npm install" on both server and clint terminal location
+2."npm start" on server terminal location
+3."npm run dev" on client terminal location
+
 Features:
 
 - Find us google maps
