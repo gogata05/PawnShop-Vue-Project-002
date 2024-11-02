@@ -1,15 +1,30 @@
 // client\src\dataProviders\products.js
 import axiosInstance from "../configs/axios";
 
-export async function getProducts(type) {
+export async function getProducts(params = {}) {
   try {
-    const res = await axiosInstance.get(`/${type}`);
+    console.log("Fetching products with params:", params);
+    const queryString = new URLSearchParams();
+    
+    // Добавяне на параметрите към URL
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== "" && value !== null && value !== undefined) {
+        queryString.append(key, value);
+      }
+    });
+
+    const url = `/products?${queryString.toString()}`;
+    console.log("Request URL:", url);
+    
+    const res = await axiosInstance.get(url);
+    console.log("Products response:", res.data);
     return res.data;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
     return null;
   }
 }
+
 export async function getProduct(id) {
   try {
     const res = await axiosInstance.get(`/details/${id}`);

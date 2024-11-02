@@ -27,23 +27,24 @@
     </nav>
 
     <!-- Profile Dropdown -->
-    <div class="welcome" v-if="isAuthenticated" ref="container" @click="toggleDropdown" tabindex="0">
-      <span>Welcome, </span>
-      <span class="email">{{ email }}</span>
-      <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-      </svg>
+    <div class="welcome" v-if="isAuthenticated" ref="container">
+      <div class="user-info" @click="toggleDropdown">
+        <span>Welcome, </span>
+        <span class="email">{{ email }}</span>
+      </div>
+      <div class="favorites-icon" @click="goToFavorites">
+        <font-awesome-icon :icon="['far', 'heart']" :class="{ active: isInFavoritesPage }" />
+        <span v-if="favoritesCount > 0" class="count-badge">{{ favoritesCount }}</span>
+      </div>
+      <div class="cart-icon" @click="goToCart">
+        <font-awesome-icon icon="shopping-cart" :class="{ active: isCartPage }" />
+        <span v-if="itemCount > 0" class="count-badge">{{ itemCount }}</span>
+      </div>
 
       <!-- Dropdown Menu -->
       <ul v-if="showDropdown" class="dropdown-menu" @click.stop>
         <li>
-          <router-link :to="{ name: 'Profile' }">My Favourites</router-link>
-        </li>
-        <li>
           <router-link :to="{ name: 'Orders' }">My Orders</router-link>
-        </li>
-        <li>
-          <router-link :to="{ name: 'Cart' }">My Cart</router-link>
         </li>
         <li>
           <router-link :to="{ name: 'AddProduct' }">Add a Product</router-link>
@@ -52,13 +53,9 @@
           <router-link :to="{ name: 'ManageAccount' }">Manage Account</router-link>
         </li>
         <li>
-          <a @click.prevent="handleLogout" href="javascript:void(0);">Logout</a>
+          <a @click.prevent="handleLogout" href="#">Logout</a>
         </li>
       </ul>
-    </div>
-    <div class="cart-icon" @click="goToCart">
-      <font-awesome-icon :icon="['fas', 'shopping-cart']" :style="{ color: isCartPage ? 'purple' : 'white' }" />
-      <span v-if="itemCount > 0" class="item-count">{{ itemCount }}</span>
     </div>
   </header>
 </template>
@@ -105,6 +102,8 @@ export default {
     const email = computed(() => userStore.email);
     const itemCount = computed(() => cartStore.itemCount);
     const isCartPage = computed(() => route.name === "Cart");
+    const favoritesCount = computed(() => userStore.favoritesCount);
+    const isInFavoritesPage = computed(() => route.path === "/favorites");
 
     const redirectToHome = () => {
       router.push({ name: "Home" });
@@ -120,6 +119,10 @@ export default {
       router.push({ name: "Cart" });
     };
 
+    const goToFavorites = () => {
+      router.push("/favorites");
+    };
+
     return {
       showDropdown,
       toggleDropdown,
@@ -131,7 +134,10 @@ export default {
       cartStore,
       itemCount,
       goToCart,
-      isCartPage
+      isCartPage,
+      favoritesCount,
+      isInFavoritesPage,
+      goToFavorites
     };
   }
 };
@@ -178,27 +184,24 @@ header a,
   position: absolute;
   top: 100%;
   right: 0;
-  background: #343a40;
-  border: 1px solid #495057;
+  background: #212529;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  margin-top: 0.5rem;
-  list-style: none;
   padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  z-index: 1000;
   min-width: 200px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
 }
 .dropdown-menu li {
-  padding: 0;
-}
-.dropdown-menu li a {
-  display: block;
   padding: 0.5rem 1rem;
-  color: #fff;
-  text-decoration: none;
 }
-.dropdown-menu li a:hover {
-  background-color: #495057;
+.dropdown-menu li:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.dropdown-menu a {
+  color: white;
+  text-decoration: none;
+  display: block;
 }
 header nav ul li {
   list-style: none;
@@ -236,5 +239,31 @@ header nav ul {
   border-radius: 50%;
   padding: 0 6px;
   font-size: 0.8rem;
+}
+
+.favorites-icon {
+  position: relative;
+  cursor: pointer;
+  margin: 0 1rem;
+  color: white;
+}
+
+.favorites-icon.active {
+  color: purple;
+}
+
+.count-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0 6px;
+  font-size: 0.8rem;
+}
+
+.user-info {
+  cursor: pointer;
 }
 </style>

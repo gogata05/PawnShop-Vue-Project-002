@@ -6,18 +6,19 @@ exports.auth = function (req, res, next) {
   let token = req.cookies[TOKEN_COOKIE_NAME];
 
   if (!token) {
+    req.user = null;
     return next();
   }
 
   jwt.verify(token, SECRET, function (err, decodedToken) {
     if (err) {
-      console.log("Invalid token, clearing cookie.");
+      console.log("Invalid token:", err);
       res.clearCookie(TOKEN_COOKIE_NAME, { path: "/" });
+      req.user = null;
       return next();
     }
 
     req.user = decodedToken;
-
     next();
   });
 };

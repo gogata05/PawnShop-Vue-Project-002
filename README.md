@@ -32,4 +32,4 @@ Features:
 - Star Rating
 
 add seed data:
-Post http://localhost:5000/seed
+Post http://localhost:5000/seed or npm run seed

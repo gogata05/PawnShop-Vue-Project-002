@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const useCartStore = defineStore("cart", {
   state: () => ({
-    items: []
+    items: JSON.parse(localStorage.getItem("cart")) || []
   }),
   getters: {
     itemCount: state => state.items.reduce((acc, item) => acc + item.quantity, 0),
@@ -17,18 +17,25 @@ export const useCartStore = defineStore("cart", {
       } else {
         this.items.push({ product, quantity });
       }
+      this.saveToLocalStorage();
     },
     removeFromCart(productId) {
       this.items = this.items.filter(item => item.product._id !== productId);
+      this.saveToLocalStorage();
     },
     updateQuantity(productId, quantity) {
       const item = this.items.find(item => item.product._id === productId);
       if (item) {
         item.quantity = quantity;
       }
+      this.saveToLocalStorage();
     },
     clearCart() {
       this.items = [];
+      this.saveToLocalStorage();
+    },
+    saveToLocalStorage() {
+      localStorage.setItem("cart", JSON.stringify(this.items));
     }
   }
 });

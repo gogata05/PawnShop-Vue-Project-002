@@ -7,6 +7,7 @@ const router = express.Router();
 const productServices = require("../services/productServices");
 const User = require("../models/User");
 const authServices = require("../services/authServices");
+const Product = require("../models/Product");
 
 let generalError = "We are experiencing technical difficulties and are working to resolve them. Thank you for your understanding!";
 
@@ -249,6 +250,54 @@ router.get("/search", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: "Error while searching" });
+  }
+});
+
+router.get("/products", async (req, res) => {
+  try {
+    console.log("Получени параметри:", req.query);
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12;
+    const skip = (page - 1) * limit;
+    
+    const query = {};
+    
+    if (req.query.brand) query.brand = req.query.brand;
+    if (req.query.productType) query.productType = req.query.productType;
+    if (req.query.condition) query.condition = req.query.condition;
+    if (req.query.priceMin || req.query.priceMax) {
+      query.price = {};
+      if (req.query.priceMin) query.price.$gte = parseInt(req.query.priceMin);
+      if (req.query.priceMax) query.price.$lte = parseInt(req.query.priceMax);
+    }
+
+    console.log("Constructed query:", query);
+
+    const sortField = req.query.sortBy || "createdAt";
+    const sortOrder = req.query.order === "asc" ? 1 : -1;
+    const sort = { [sortField]: sortOrder };
+
+    const [products, total] = await Promise.all([
+      Product.find(query)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Product.countDocuments(query)
+    ]);
+
+    console.log(`Намерени ${products.length} продукта от общо ${total}`);
+
+    res.json({
+      products,
+      total,
+      page,
+      pages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Failed to fetch products" });
   }
 });
 

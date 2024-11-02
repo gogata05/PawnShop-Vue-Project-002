@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set NODE_ENV=development&& nodemon ./index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "node -e \"require('./config/seedData').seedDatabase()\""
+    "seed": "node config/seedData.js"
   },
   "keywords": [],
   "author": "",

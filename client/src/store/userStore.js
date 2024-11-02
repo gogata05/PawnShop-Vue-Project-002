@@ -5,10 +5,11 @@ import { getProfile } from "../dataProviders/auth";
 export const useUserStore = defineStore("user", {
   state: () => ({
     isAuthenticated: false,
-    id: null,
+    id: localStorage.getItem("id") || null,
     email: "",
     firstName: "",
-    lastName: ""
+    lastName: "",
+    favoritesCount: 0
   }),
   actions: {
     async getPersistedProfile() {
@@ -24,6 +25,7 @@ export const useUserStore = defineStore("user", {
             this.email = profile.email;
             this.firstName = profile.firstName;
             this.lastName = profile.lastName;
+            this.favoritesCount = profile.favorites?.length || 0;
           }
         } catch (error) {
           console.error("Failed to load profile:", error);
@@ -37,7 +39,6 @@ export const useUserStore = defineStore("user", {
       this.email = userData.email;
       this.firstName = userData.firstName;
       this.lastName = userData.lastName;
-      console.log("User logged in:", this.id, this.email, this.firstName, this.lastName);
       localStorage.setItem("id", userData.id);
     },
     logout() {
@@ -46,6 +47,7 @@ export const useUserStore = defineStore("user", {
       this.email = "";
       this.firstName = "";
       this.lastName = "";
+      this.favoritesCount = 0;
       localStorage.removeItem("id");
     }
   }

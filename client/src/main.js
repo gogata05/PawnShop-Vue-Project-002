@@ -13,6 +13,7 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import "./configs/fontawesome";
 import { faShoppingCart, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 
 const app = createApp(App);

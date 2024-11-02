@@ -1,23 +1,22 @@
 // client\src\router\index.js
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../store/userStore";
-const PageHome = () => import("../views/PageHome.vue");
-const PageLogin = () => import("../views/PageLogin.vue");
-const PageRegister = () => import("../views/PageRegister.vue");
-const PageNotFound = () => import("../views/PageNotFound.vue");
-const PageUserProfile = () => import("../views/PageUserProfile.vue");
-const PageAddProduct = () => import("../views/PageAddProduct.vue");
-const PageEditProduct = () => import("../views/PageEditProduct.vue");
-const PageFindUs = () => import("../views/PageFindUs.vue");
-const PageProducts = () => import("../views/PageProducts.vue");
-const PageProductDetails = () => import("../views/PageProductDetails.vue");
-const PageHelp = () => import("../views/PageHelp.vue");
-const PageSearch = () => import("../views/PageSearch.vue");
-const PageManageAccount = () => import("../views/PageManageAccount.vue");
-
-const PageCart = () => import("../views/PageCart.vue");
-const PageSuccess = () => import("../views/PageSuccess.vue");
-const PageOrders = () => import("../views/PageOrders.vue");
+import PageHome from "../views/PageHome.vue";
+import PageLogin from "../views/PageLogin.vue";
+import PageRegister from "../views/PageRegister.vue";
+import PageNotFound from "../views/PageNotFound.vue";
+import PageAddProduct from "../views/PageAddProduct.vue";
+import PageEditProduct from "../views/PageEditProduct.vue";
+import PageFindUs from "../views/PageFindUs.vue";
+import PageProducts from "../views/PageProducts.vue";
+import PageProductDetails from "../views/PageProductDetails.vue";
+import PageHelp from "../views/PageHelp.vue";
+import PageSearch from "../views/PageSearch.vue";
+import PageManageAccount from "../views/PageManageAccount.vue";
+import PageCart from "../views/PageCart.vue";
+import PageSuccess from "../views/PageSuccess.vue";
+import PageOrders from "../views/PageOrders.vue";
+import PageFavorites from "../views/PageFavorites.vue";
 
 function validateUser() {
   const userStore = useUserStore();
@@ -82,12 +81,6 @@ const routes = [
     beforeEnter: isLoggedIn
   },
   {
-    path: "/user/profile",
-    component: PageUserProfile,
-    name: "Profile",
-    beforeEnter: validateUser
-  },
-  {
     path: "/help",
     component: PageHelp,
     name: "Help"
@@ -121,12 +114,33 @@ const routes = [
     name: "Orders",
     beforeEnter: validateUser
   },
+  {
+    path: "/favorites",
+    name: "Favorites",
+    component: PageFavorites,
+    meta: { requiresAuth: true }
+  },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+
+  if (to.meta.requiresAuth) {
+    if (!userStore.isAuthenticated) {
+      await userStore.getPersistedProfile();
+      if (!userStore.isAuthenticated) {
+        next({ name: "Login" });
+        return;
+      }
+    }
+  }
+  next();
 });
 
 export default router;
