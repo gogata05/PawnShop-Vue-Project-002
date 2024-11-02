@@ -1,4 +1,4 @@
-<!-- client\src\views\PageSearch.vue -->
+<!-- client\src\views\PageAllProducts.vue -->
 <template>
   <div class="searchContainer">
     <!-- Search Bar -->
@@ -111,6 +111,7 @@ import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
 
 export default {
+  name: "PageAllProducts",
   components: { Loader },
   data() {
     return {

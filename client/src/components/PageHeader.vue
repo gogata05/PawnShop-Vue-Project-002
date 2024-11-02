@@ -8,13 +8,10 @@
           <router-link :to="{ name: 'Home' }"> Home </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'AllProducts' }"> All Products </router-link>
-        </li>
-        <li>
           <router-link :to="{ name: 'Top10' }"> Top 10 Products </router-link>
         </li>
         <li>
-          <router-link :to="{ name: 'Search' }"> Search </router-link>
+          <router-link :to="{ name: 'AllProducts' }"> All Products </router-link>
         </li>
         <!-- Authenticated User Links Removed from Nav -->
         <li class="auth" v-if="!isAuthenticated">

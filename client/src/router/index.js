@@ -11,7 +11,7 @@ import PageFindUs from "../views/PageFindUs.vue";
 import PageProducts from "../views/PageProducts.vue";
 import PageProductDetails from "../views/PageProductDetails.vue";
 import PageHelp from "../views/PageHelp.vue";
-import PageSearch from "../views/PageSearch.vue";
+import PageSearch from "../views/PageAllProducts.vue";
 import PageManageAccount from "../views/PageManageAccount.vue";
 import PageCart from "../views/PageCart.vue";
 import PageSuccess from "../views/PageSuccess.vue";
@@ -36,7 +36,7 @@ const routes = [
   },
   {
     path: "/all-products",
-    component: PageProducts,
+    component: PageSearch,
     name: "AllProducts"
   },
   {
