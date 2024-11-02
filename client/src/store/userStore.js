@@ -12,17 +12,21 @@ export const useUserStore = defineStore("user", {
   }),
   actions: {
     async getPersistedProfile() {
+      console.log("Getting persisted profile...");
       const id = localStorage.getItem("id");
       if (id) {
         try {
           const profile = await getProfile();
-          this.isAuthenticated = true;
-          this.id = id;
-          this.email = profile.email;
-          this.firstName = profile.firstName;
-          this.lastName = profile.lastName;
+          console.log("Profile loaded:", profile);
+          if (profile) {
+            this.isAuthenticated = true;
+            this.id = id;
+            this.email = profile.email;
+            this.firstName = profile.firstName;
+            this.lastName = profile.lastName;
+          }
         } catch (error) {
-          console.error("Failed to load persisted profile:", error);
+          console.error("Failed to load profile:", error);
           this.logout();
         }
       }

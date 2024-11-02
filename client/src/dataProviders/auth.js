@@ -24,10 +24,12 @@ export async function logoutUser() {
 export async function getProfile() {
   try {
     const id = localStorage.getItem("id");
+    console.log("Getting profile for ID:", id);
     const res = await axiosInstance.get(`/users/profile/${id}`);
+    console.log("Profile response:", res.data);
     return res.data;
   } catch (error) {
-    console.log(error);
+    console.error("Error getting profile:", error);
     return null;
   }
 }
