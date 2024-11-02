@@ -30,3 +30,6 @@ Features:
 - Footer links
 - Composition API
 - Star Rating
+
+add seed data:
+Post http://localhost:5000/seed
