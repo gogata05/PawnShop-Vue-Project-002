@@ -8,6 +8,7 @@ const routes = require("./routes");
 const initDatabase = require("./config/database");
 const { auth } = require("./middlewares/authMiddleware");
 const orderController = require("./controllers/orderController");
+const { seedDatabase } = require("./config/seedData");
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
@@ -15,6 +16,16 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(auth);
 app.use(routes);
 app.use("/orders", orderController);
+
+// Add this route for seeding
+app.post("/seed", async (req, res) => {
+  try {
+    const result = await seedDatabase();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to seed database" });
+  }
+});
 
 initDatabase(process.env.DB_CONNECTION_STRING) // Променете тук
   .then(() => {
