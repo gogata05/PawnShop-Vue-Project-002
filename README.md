@@ -30,6 +30,7 @@ Features:
 - Footer links
 - Composition API
 - Star Rating
+- Seed Data Products
 
 add seed data:
 Post http://localhost:5000/seed or npm run seed
