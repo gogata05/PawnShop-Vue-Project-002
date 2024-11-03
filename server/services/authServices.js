@@ -21,9 +21,11 @@ const login = (email, password) => {
 const createToken = function (user) {
   let payload = {
     _id: user._id,
-    email: user.email
+    email: user.email,
+    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24) // 24 часа валидност
   };
 
+  console.log("Creating token with payload:", payload);
   return jwtSign(payload, SECRET);
 };
 
