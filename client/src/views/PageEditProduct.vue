@@ -132,6 +132,7 @@ export default {
         <option value="Jewelry">Jewelry</option>
         <option value="Electronics">Electronics</option>
         <option value="Watches">Watches</option>
+        <option value="Clothing">Clothing</option>
         <option value="Art">Art</option>
         <option value="Collectibles">Collectibles</option>
         <option value="Coins & Currency">Coins & Currency</option>

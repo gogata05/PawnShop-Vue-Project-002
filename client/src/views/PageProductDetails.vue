@@ -8,6 +8,9 @@ import { useUserStore } from "../store/userStore";
 import { mapState } from "pinia";
 import { useToast } from "vue-toastification";
 import { useCartStore } from "../store/cartStore"; // Добавено импортиране
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
+library.add(faHeart);
 
 export default {
   components: { Loader },
@@ -60,8 +63,13 @@ export default {
       this.productData.voted = true;
     },
     async favoriteProduct() {
-      await favoriteProduct(this.productData.product._id);
-      this.productData.isInFavorites = true;
+      if (!this.productData.isInFavorites) {
+        await favoriteProduct(this.productData.product._id);
+        this.productData.isInFavorites = true;
+        this.toast.success("Added to favorites!");
+      } else {
+        this.toast.info("Already in favorites!");
+      }
     },
     async comment() {
       await comment(this.productData.product._id, this.userData);
@@ -130,21 +138,6 @@ export default {
                 <button class="warning-btn" @click="dislikeProduct" v-if="!productData.voted">Dislike</button>
                 <h3 v-if="productData.voted">Thank you for voting on this product!</h3>
               </div>
-              <div class="project-info-box mybuttons" v-if="!productData.isOwnedBy">
-                <button class="fav-btn" @click="favoriteProduct" v-if="!productData.isInFavorites">Add to Favorites</button>
-                <h3 v-else>This product has been added to your favorites!</h3>
-              </div>
-              <div class="project-info-box mybuttons" v-if="productData.isOwnedBy">
-                <router-link
-                  class="dark-btn"
-                  :to="{
-                    name: 'EditProduct',
-                    params: { id: $route.params.id }
-                  }"
-                  >Edit</router-link
-                >
-                <button class="danger-btn" @click="deleteProduct">Delete</button>
-              </div>
             </div>
             <div v-else class="project-info-box">
               <p>
@@ -161,6 +154,9 @@ export default {
         <div class="row img">
           <div class="flex-container">
             <div class="image-container">
+              <div class="favorite-icon" v-if="isAuthenticated" @click="favoriteProduct">
+                <font-awesome-icon :icon="['fas', 'heart']" :class="{ favorited: productData.isInFavorites }" />
+              </div>
               <img :src="productData.product.imgUrl" alt="project-pic" class="rounded" />
             </div>
             <div id="wrapper" v-if="isAuthenticated">
@@ -280,11 +276,38 @@ h2 {
 }
 
 .image-container {
+  position: relative;
   width: 100%;
-  height: 609px;
-  overflow: hidden;
-  min-width: 1000px;
-  max-width: 1000px;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1;
+  cursor: pointer;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.favorite-icon:hover {
+  transform: scale(1.1);
+}
+
+.favorite-icon svg {
+  color: #ffffff;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+}
+
+.favorite-icon .favorited {
+  color: #ff0000;
 }
 
 .image-container img {

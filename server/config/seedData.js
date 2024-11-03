@@ -53,7 +53,7 @@ const seedProducts = [
   {
     brand: "Nike",
     model: "Air Max 270",
-    productType: "Footwear",
+    productType: "Clothing", // Changed from "Footwear"
     year: 2024,
     imgUrl: "https://upload.wikimedia.org/wikipedia/commons/3/36/Nike_Air_Max_1.png",
     description: "Comfortable and stylish sneakers for everyday wear",
@@ -77,7 +77,7 @@ const seedProducts = [
   {
     brand: "Levi's",
     model: "501 Original",
-    productType: "Clothing",
+    productType: "Clothing", // Changed from "Clothing"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/61K0FlHa0SL._AC_SX679_.jpg",
     description: "Classic straight-fit jeans with timeless style",
@@ -89,7 +89,7 @@ const seedProducts = [
   {
     brand: "Dell",
     model: "XPS 13",
-    productType: "Computers",
+    productType: "Electronics", // Changed from "Computers"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/51Fwu64IFvL._AC_.jpg",
     description: "Ultra-portable laptop with high-resolution display",
@@ -101,7 +101,7 @@ const seedProducts = [
   {
     brand: "Canon",
     model: "EOS R5",
-    productType: "Cameras",
+    productType: "Electronics", // Changed from "Cameras"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/81R7ewwBg3L._AC_SL1500_.jpg",
     description: "Professional mirrorless camera with 45MP sensor",
@@ -113,7 +113,7 @@ const seedProducts = [
   {
     brand: "Gucci",
     model: "GG Marmont Bag",
-    productType: "Accessories",
+    productType: "Clothing", // Changed from "Accessories"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/81HWpvrsISL._AC_SL1500_.jpg",
     description: "Elegant leather handbag with iconic GG hardware",
@@ -125,7 +125,7 @@ const seedProducts = [
   {
     brand: "Microsoft",
     model: "Surface Pro 9",
-    productType: "Computers",
+    productType: "Electronics", // Changed from "Computers"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/5165MJQZNCL._AC_SL1000_.jpg",
     description: "2-in-1 laptop with touchscreen and detachable keyboard",
@@ -149,7 +149,7 @@ const seedProducts = [
   {
     brand: "Adidas",
     model: "Ultraboost 21",
-    productType: "Footwear",
+    productType: "Clothing", // Changed from "Footwear"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/71Cy2jLJeVL._AC_SL1500_.jpg",
     description: "High-performance running shoes with responsive cushioning",
@@ -161,7 +161,7 @@ const seedProducts = [
   {
     brand: "Panasonic",
     model: "Lumix GH5",
-    productType: "Cameras",
+    productType: "Electronics", // Changed from "Cameras"
     year: 2022,
     imgUrl: "https://m.media-amazon.com/images/I/61jB87lEjQL._AC_SL1080_.jpg",
     description: "Professional mirrorless camera for videography and photography",
@@ -185,7 +185,7 @@ const seedProducts = [
   {
     brand: "Sony",
     model: "PlayStation 5",
-    productType: "Gaming",
+    productType: "Electronics", // Changed from "Gaming"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/51NbBH89m1L._AC_SL1500_.jpg",
     description: "Next-gen gaming console with immersive graphics",
@@ -197,7 +197,7 @@ const seedProducts = [
   {
     brand: "Lululemon",
     model: "Align Leggings",
-    productType: "Clothing",
+    productType: "Clothing", // Changed from "Clothing"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/61Isb40O6wL._AC_SX569_.jpg",
     description: "Premium yoga leggings with buttery-soft fabric",
@@ -209,7 +209,7 @@ const seedProducts = [
   {
     brand: "Tesla",
     model: "Model 3",
-    productType: "Automotive",
+    productType: "Other", // Changed from "Automotive"
     year: 2023,
     imgUrl: "https://upload.wikimedia.org/wikipedia/commons/9/91/2019_Tesla_Model_3_Performance_AWD_Front.jpg",
     description: "Electric sedan with impressive range and autopilot features",
@@ -221,7 +221,7 @@ const seedProducts = [
   {
     brand: "Samsung",
     model: "QLED TV 55",
-    productType: "Home Appliances",
+    productType: "Electronics", // Changed from "Home Appliances"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/717pBTEzwnL._AC_SL1500_.jpg",
     description: "55-inch QLED Smart TV with vibrant colors and smart features",
@@ -233,7 +233,7 @@ const seedProducts = [
   {
     brand: "Apple",
     model: 'MacBook Pro 16"',
-    productType: "Computers",
+    productType: "Electronics", // Changed from "Computers"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/51F5AOfbAkL._AC_SL1500_.jpg",
     description: "Powerful laptop with M1 Pro chip for professionals",
@@ -245,7 +245,7 @@ const seedProducts = [
   {
     brand: "Patagonia",
     model: "Down Jacket",
-    productType: "Clothing",
+    productType: "Clothing", // Changed from "Clothing"
     year: 2022,
     imgUrl: "https://m.media-amazon.com/images/I/61eBsCP7JUL._AC_SX679_.jpg",
     description: "Warm and lightweight down jacket for outdoor activities",
@@ -281,7 +281,7 @@ const seedProducts = [
   {
     brand: "Herman Miller",
     model: "Aeron Chair",
-    productType: "Furniture",
+    productType: "Other", // Changed from "Furniture"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/7194RcPKLOL._AC_SL1500_.jpg",
     description: "Ergonomic office chair with breathable mesh and adjustable settings",
@@ -293,7 +293,7 @@ const seedProducts = [
   {
     brand: "Dyson",
     model: "V11 Vacuum",
-    productType: "Home Appliances",
+    productType: "Electronics", // Changed from "Home Appliances"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/41XyJOWin0L._AC_.jpg",
     description: "Powerful cordless vacuum cleaner with intelligent suction control",
@@ -317,7 +317,7 @@ const seedProducts = [
   {
     brand: "The North Face",
     model: "ThermoBall Jacket",
-    productType: "Clothing",
+    productType: "Clothing", // Changed from "Clothing"
     year: 2022,
     imgUrl: "https://m.media-amazon.com/images/I/61cGkUIgmwL._AC_SX522_.jpg",
     description: "Insulated jacket with lightweight warmth and water resistance",
@@ -329,7 +329,7 @@ const seedProducts = [
   {
     brand: "Nintendo",
     model: "Switch OLED",
-    productType: "Gaming",
+    productType: "Watches", // Changed from "Gaming"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/71ZvqI8yj1L._AC_SL1500_.jpg",
     description: "Enhanced Nintendo Switch with vibrant OLED display",
@@ -353,7 +353,7 @@ const seedProducts = [
   {
     brand: "Lego",
     model: "Star Wars Millennium Falcon",
-    productType: "Toys",
+    productType: "Other", // Changed from "Toys"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/81rKf-KHzwL._AC_SL1500_.jpg",
     description: "Detailed LEGO set of the iconic Millennium Falcon",
@@ -365,7 +365,7 @@ const seedProducts = [
   {
     brand: "KitchenAid",
     model: "Stand Mixer",
-    productType: "Home Appliances",
+    productType: "Electronics", // Changed from "Home Appliances"
     year: 2022,
     imgUrl: "https://m.media-amazon.com/images/I/61llbkDjldL._AC_SL1500_.jpg",
     description: "Versatile stand mixer with multiple attachments for baking",
@@ -377,7 +377,7 @@ const seedProducts = [
   {
     brand: "Sony",
     model: "Bravia 4K TV",
-    productType: "Home Appliances",
+    productType: "Electronics", // Changed from "Home Appliances"
     year: 2024,
     imgUrl: "https://m.media-amazon.com/images/I/819-1jfnSgL._AC_SL1500_.jpg",
     description: "55-inch 4K Ultra HD smart TV with HDR and streaming capabilities",
@@ -389,7 +389,7 @@ const seedProducts = [
   {
     brand: "Microsoft",
     model: "Xbox Series X",
-    productType: "Gaming",
+    productType: "Electronics", // Changed from "Gaming"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/51mwv0GwH2L._AC_SL1500_.jpg",
     description: "Next-generation gaming console with powerful performance",
@@ -413,7 +413,7 @@ const seedProducts = [
   {
     brand: "Burberry",
     model: "Classic Trench Coat",
-    productType: "Clothing",
+    productType: "Other", // Changed from "Clothing"
     year: 2023,
     imgUrl: "https://m.media-amazon.com/images/I/718CwPljE1L._AC_SX466_.jpg",
     description: "Iconic trench coat made from premium materials",
