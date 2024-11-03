@@ -26,14 +26,12 @@ router.get("/all-products", async (req, res) => {
 
 router.get("/top-10", async (req, res) => {
   try {
-    let products = await productServices.getTop10();
+    const products = await Product.find().sort({ rating: -1 }).limit(10).lean();
 
     res.json({ products });
   } catch (error) {
-    console.error(error);
-    res.status(400).json({
-      error: generalError
-    });
+    console.error("Error fetching top products:", error);
+    res.status(500).json({ error: "Failed to fetch top products" });
   }
 });
 
@@ -256,13 +254,13 @@ router.get("/search", async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     console.log("Получени параметри:", req.query);
-    
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 12;
     const skip = (page - 1) * limit;
-    
+
     const query = {};
-    
+
     if (req.query.brand) query.brand = req.query.brand;
     if (req.query.productType) query.productType = req.query.productType;
     if (req.query.condition) query.condition = req.query.condition;
@@ -278,14 +276,7 @@ router.get("/products", async (req, res) => {
     const sortOrder = req.query.order === "asc" ? 1 : -1;
     const sort = { [sortField]: sortOrder };
 
-    const [products, total] = await Promise.all([
-      Product.find(query)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .lean(),
-      Product.countDocuments(query)
-    ]);
+    const [products, total] = await Promise.all([Product.find(query).sort(sort).skip(skip).limit(limit).lean(), Product.countDocuments(query)]);
 
     console.log(`Намерени ${products.length} продукта от общо ${total}`);
 

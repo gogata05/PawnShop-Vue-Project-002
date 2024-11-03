@@ -66,9 +66,7 @@ export default {
       if (!this.productData.isInFavorites) {
         await favoriteProduct(this.productData.product._id);
         this.productData.isInFavorites = true;
-        this.toast.success("Added to favorites!");
       } else {
-        this.toast.info("Already in favorites!");
       }
     },
     async comment() {
@@ -80,7 +78,6 @@ export default {
     addToCart() {
       const cartStore = useCartStore();
       cartStore.addToCart(this.productData.product, this.quantity);
-      this.toast.success("Product added to cart!");
     }
   },
   computed: {

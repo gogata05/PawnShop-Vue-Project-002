@@ -29,13 +29,13 @@
         <div class="combined-links">
           <router-link to="/all-products" class="hover-underline">All Products</router-link>
           <router-link to="/top-10" class="hover-underline">Top 10 Products</router-link>
-          <router-link to="/user/profile" class="hover-underline">My Favourites</router-link>
+          <router-link to="/favorites" class="hover-underline">My Favourites</router-link>
           <router-link to="/add" class="hover-underline">Add Product</router-link>
         </div>
         <div class="combined-links">
           <router-link to="/all-products" class="hover-underline">All Products</router-link>
           <router-link to="/top-10" class="hover-underline">Top 10 Products</router-link>
-          <router-link to="/user/profile" class="hover-underline">My Favourites</router-link>
+          <router-link to="/favorites" class="hover-underline">My Favourites</router-link>
           <router-link to="/add" class="hover-underline">Add Product</router-link>
         </div>
 

@@ -89,6 +89,18 @@ const search = async ({ filters, page, limit, sortBy, sortOrder }) => {
   return { products, total, page, pages };
 };
 
+const removeFavorite = async (productId, userId) => {
+  try {
+    const user = await User.findById(userId);
+    user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
+    await user.save();
+    return true;
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+    return false;
+  }
+};
+
 const productServices = {
   create,
   getAll,
@@ -101,6 +113,7 @@ const productServices = {
   edit,
   comment,
   getLatest,
-  search
+  search,
+  removeFavorite
 };
 module.exports = productServices;

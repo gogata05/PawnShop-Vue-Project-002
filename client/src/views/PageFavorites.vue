@@ -63,14 +63,12 @@ export default {
 
     const addToCart = product => {
       cartStore.addToCart(product, 1);
-      toast.success("Added to cart!");
     };
 
     const removeFromFavorites = async productId => {
       try {
         await favoriteProduct(productId);
         await loadFavorites();
-        toast.success("Removed from favorites");
       } catch (error) {
         console.error("Error removing from favorites:", error);
         toast.error("Failed to remove from favorites");

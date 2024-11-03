@@ -20,7 +20,8 @@ import PageFavorites from "../views/PageFavorites.vue";
 
 function validateUser() {
   const userStore = useUserStore();
-  return userStore.isAuthenticated ? userStore.isAuthenticated : { path: "/user/login" };
+  const userId = localStorage.getItem("id");
+  return userId ? true : { path: "/user/login" };
 }
 
 function isLoggedIn() {

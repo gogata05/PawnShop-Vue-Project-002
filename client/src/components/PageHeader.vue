@@ -186,19 +186,21 @@ header a,
   border-radius: 4px;
   padding: 0.5rem 0;
   margin-top: 0.5rem;
-  z-index: 1000;
   min-width: 200px;
+  list-style: none;
 }
 .dropdown-menu li {
   padding: 0.5rem 1rem;
+  margin: 0;
 }
-.dropdown-menu li:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-.dropdown-menu a {
+.dropdown-menu li a {
   color: white;
   text-decoration: none;
   display: block;
+  width: 100%;
+}
+.dropdown-menu li:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 header nav ul li {
   list-style: none;
