@@ -155,3 +155,15 @@ export async function getTop10Products() {
     return null;
   }
 }
+
+export async function toggleFavorite(id) {
+  try {
+    console.log("Toggling favorite for product:", id);
+    const res = await axiosInstance.post(`/products/favorites/toggle/${id}`);
+    console.log("Toggle response:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
+    return null;
+  }
+}

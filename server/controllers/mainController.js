@@ -328,4 +328,46 @@ router.delete("/products/favorites/:productId", isAuth, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.post("/products/favorites/toggle/:productId", isAuth, async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const userId = req.user._id;
+
+    console.log("Toggle favorite - ProductID:", productId);
+    console.log("UserID:", userId);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const mongoose = require("mongoose");
+    const productObjectId = new mongoose.Types.ObjectId(productId);
+    
+    // Проверяваме дали продуктът е в любими
+    const isInFavorites = user.favorites.some(favId => favId.equals(productObjectId));
+    
+    if (isInFavorites) {
+      // Ако е в любими, го премахваме
+      user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
+    } else {
+      // Ако не е в любими, го добавяме
+      user.favorites.push(productObjectId);
+    }
+
+    await user.save();
+    console.log("User favorites updated successfully");
+
+    res.json({
+      message: isInFavorites ? "Removed from favorites" : "Added to favorites",
+      newCount: user.favorites.length,
+      isInFavorites: !isInFavorites
+    });
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 module.exports = router;

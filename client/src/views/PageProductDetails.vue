@@ -1,6 +1,6 @@
 <!-- client\src\views\PageProductDetails.vue -->
 <script>
-import { getProduct, deleteProduct, likeProduct, dislikeProduct, favoriteProduct, comment } from "../dataProviders/products";
+import { getProduct, deleteProduct, likeProduct, dislikeProduct, toggleFavorite, comment } from "../dataProviders/products";
 import { getProfile } from "../dataProviders/auth";
 import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
@@ -62,11 +62,27 @@ export default {
       this.productData.product.rating--;
       this.productData.voted = true;
     },
-    async favoriteProduct() {
-      if (!this.productData.isInFavorites) {
-        await favoriteProduct(this.productData.product._id);
-        this.productData.isInFavorites = true;
-      } else {
+    async toggleFavoriteStatus() {
+      try {
+        console.log("Toggling favorite status for product:", this.productData.product._id);
+        const response = await toggleFavorite(this.productData.product._id);
+        
+        if (response) {
+          // Обръщаме статуса локално
+          this.productData.isInFavorites = !this.productData.isInFavorites;
+          
+          // Актуализираме брояча в store
+          this.userStore.favoritesCount = response.newCount;
+          
+          // Показваме съобщение
+          const message = this.productData.isInFavorites 
+            ? "Product added to favorites!" 
+            : "Product removed from favorites!";
+          this.toast.success(message);
+        }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
+        this.toast.error("Failed to update favorites");
       }
     },
     async comment() {
@@ -151,8 +167,8 @@ export default {
         <div class="row img">
           <div class="flex-container">
             <div class="image-container">
-              <div class="favorite-icon" v-if="isAuthenticated" @click="favoriteProduct">
-                <font-awesome-icon :icon="['fas', 'heart']" :class="{ favorited: productData.isInFavorites }" />
+              <div class="favorite-icon" v-if="isAuthenticated" @click="toggleFavoriteStatus">
+                <font-awesome-icon :icon="['fas', 'heart']" :class="{ 'favorited': productData.isInFavorites }" />
               </div>
               <img :src="productData.product.imgUrl" alt="project-pic" class="rounded" />
             </div>
@@ -299,12 +315,16 @@ h2 {
 }
 
 .favorite-icon svg {
-  color: #ffffff;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+  color: #ccc;
+  transition: color 0.3s ease;
 }
 
-.favorite-icon .favorited {
-  color: #ff0000;
+.favorite-icon svg.favorited {
+  color: #ff4136;
+}
+
+.favorite-icon:hover svg {
+  color: #ff4136;
 }
 
 .image-container img {
