@@ -1,9 +1,9 @@
 // server\middlewares\authMiddleware.js
-const { TOKEN_COOKIE_NAME, SECRET } = require("../config/constants");
+const { SECRET } = require("../config/constants");
 const jwt = require("jsonwebtoken");
 
 exports.auth = function (req, res, next) {
-  let token = req.cookies[TOKEN_COOKIE_NAME];
+  const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
     req.user = null;
@@ -13,7 +13,6 @@ exports.auth = function (req, res, next) {
   jwt.verify(token, SECRET, function (err, decodedToken) {
     if (err) {
       console.log("Invalid token:", err);
-      res.clearCookie(TOKEN_COOKIE_NAME, { path: "/" });
       req.user = null;
       return next();
     }
