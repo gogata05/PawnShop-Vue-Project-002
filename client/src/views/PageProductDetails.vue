@@ -1,6 +1,6 @@
 <!-- client\src\views\PageProductDetails.vue -->
 <script>
-import { getProduct, deleteProduct, likeProduct, dislikeProduct, favoriteProduct, comment } from "../dataProviders/products";
+import { getProduct, deleteProduct, likeProduct, dislikeProduct, toggleFavorite, comment } from "../dataProviders/products";
 import { getProfile } from "../dataProviders/auth";
 import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
@@ -24,7 +24,9 @@ export default {
       productData: {},
       isLoading: true,
       userData: { comment: "" },
-      quantity: 1 // Добавено поле за количество
+      quantity: 1,
+      isFavorite: false, // Добавяме ново поле
+      showDeleteModal: false // Добавете в
     };
   },
   async created() {
@@ -38,19 +40,38 @@ export default {
   methods: {
     async loadData() {
       this.isLoading = true;
+
+      // Зареждаме запазения статус от localStorage
+      const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+      const savedStatus = favoriteProducts[this.$route.params.id];
+
       this.productData = await getProduct(this.$route.params.id);
+
+      // Проверяваме дали текущият потребител е създател на продукта
+      const userId = localStorage.getItem("id");
+      this.productData.isOwnedBy = this.productData.product.creator._id === userId;
+
+      // Използваме запазения статус или статуса от сървъра
+      this.productData.isInFavorites = savedStatus !== undefined ? savedStatus : this.productData.isInFavorites;
+
       this.isLoading = false;
+
+      console.log("Product owner check:", {
+        productCreatorId: this.productData.product.creator._id,
+        currentUserId: userId,
+        isOwnedBy: this.productData.isOwnedBy
+      });
     },
     async deleteProduct() {
-      const isConfirmed = confirm("Are you sure you want to delete this product?");
-
-      if (isConfirmed) {
-        this.isLoading = true;
-        await deleteProduct(this.productData.product._id);
-        this.isLoading = false;
-        this.toast.success("Product deleted successfully!");
-        this.$router.push("/all-products");
-      }
+      this.showDeleteModal = true;
+    },
+    async confirmDelete() {
+      this.isLoading = true;
+      await deleteProduct(this.productData.product._id);
+      this.isLoading = false;
+      this.showDeleteModal = false;
+      this.toast.success("Product deleted successfully!");
+      this.$router.push("/all-products");
     },
     async likeProduct() {
       await likeProduct(this.productData.product._id);
@@ -62,11 +83,29 @@ export default {
       this.productData.product.rating--;
       this.productData.voted = true;
     },
-    async favoriteProduct() {
-      if (!this.productData.isInFavorites) {
-        await favoriteProduct(this.productData.product._id);
-        this.productData.isInFavorites = true;
-      } else {
+    async toggleFavoriteStatus() {
+      try {
+        console.log("Toggling favorite status for product:", this.productData.product._id);
+        const response = await toggleFavorite(this.productData.product._id);
+
+        if (response) {
+          // Обръщаме статуса локално
+          this.productData.isInFavorites = !this.productData.isInFavorites;
+
+          // Актуализираме localStorage
+          const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+          favoriteProducts[this.productData.product._id] = this.productData.isInFavorites;
+          localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
+
+          // Актуализираме брояча в store
+          this.userStore.favoritesCount = response.newCount;
+
+          const message = this.productData.isInFavorites ? "Product added to favorites!" : "Product removed from favorites!";
+          this.toast.success(message);
+        }
+      } catch (error) {
+        console.error("Error toggling favorite:", error);
+        this.toast.error("Failed to update favorites");
       }
     },
     async comment() {
@@ -90,6 +129,11 @@ export default {
         color: this.productData.product["rating"] === 0 ? "black" : this.productData.product["rating"] > 0 ? "orange" : "red"
       };
     }
+  },
+  // Добавяме cleanup при унищожаване на компонента
+  beforeUnmount() {
+    // Опционално: Изчистваме localStorage ако е необходимо
+    // localStorage.removeItem("favoriteProducts");
   }
 };
 </script>
@@ -129,6 +173,12 @@ export default {
               </div>
             </div>
 
+            <!-- Добавяме нов div за бутоните Edit и Delete -->
+            <div class="project-info-box mybuttons" v-if="productData.isOwnedBy && isAuthenticated">
+              <router-link :to="`/details/${productData.product._id}/edit`" class="dark-btn">Edit</router-link>
+              <button class="danger-btn" @click="deleteProduct">Delete</button>
+            </div>
+
             <div v-if="isAuthenticated">
               <div class="project-info-box mybuttons" v-if="!productData.isOwnedBy">
                 <button class="success-btn" @click="likeProduct" v-if="!productData.voted">Like</button>
@@ -151,7 +201,7 @@ export default {
         <div class="row img">
           <div class="flex-container">
             <div class="image-container">
-              <div class="favorite-icon" v-if="isAuthenticated" @click="favoriteProduct">
+              <div class="favorite-icon" v-if="isAuthenticated" @click="toggleFavoriteStatus">
                 <font-awesome-icon :icon="['fas', 'heart']" :class="{ favorited: productData.isInFavorites }" />
               </div>
               <img :src="productData.product.imgUrl" alt="project-pic" class="rounded" />
@@ -172,6 +222,16 @@ export default {
               <h3>Be the first to comment this product!</h3>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-overlay" v-if="showDeleteModal" @click="showDeleteModal = false">
+      <div class="modal-content" @click.stop>
+        <p>Are you sure you want to delete this product?</p>
+        <!-- make the <p> bigger -->
+        <div class="modal-buttons">
+          <button class="modal-btn cancel" @click="showDeleteModal = false">Cancel</button>
+          <button class="modal-btn confirm" @click="confirmDelete">Delete</button>
         </div>
       </div>
     </div>
@@ -299,12 +359,16 @@ h2 {
 }
 
 .favorite-icon svg {
-  color: #ffffff;
-  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+  color: #ccc;
+  transition: color 0.3s ease;
 }
 
-.favorite-icon .favorited {
-  color: #ff0000;
+.favorite-icon svg.favorited {
+  color: #ff4136;
+}
+
+.favorite-icon:hover svg {
+  color: #ff4136;
 }
 
 .image-container img {
@@ -545,5 +609,101 @@ button,
 .mybuttons .cart-btn {
   width: auto;
   flex: 1;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  animation: modalAppear 0.3s ease-out;
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-content h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.cancel {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.modal-btn.cancel:hover {
+  background-color: #e1e1e1;
+}
+
+.modal-btn.confirm {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-btn.confirm:hover {
+  background-color: #c82333;
+}
+
+/* Добавете медия куери за респонсивност */
+@media (max-width: 576px) {
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-btn {
+    width: 100%;
+  }
 }
 </style>

@@ -5,11 +5,12 @@ import { getProfile } from "../dataProviders/auth";
 export const useUserStore = defineStore("user", {
   state: () => ({
     isAuthenticated: false,
-    id: localStorage.getItem("id") || null,
+    id: null,
     email: "",
     firstName: "",
     lastName: "",
-    favoritesCount: 0
+    favoritesCount: 0,
+    token: localStorage.getItem("token") || null
   }),
   actions: {
     async getPersistedProfile() {
@@ -39,6 +40,8 @@ export const useUserStore = defineStore("user", {
       this.email = userData.email;
       this.firstName = userData.firstName;
       this.lastName = userData.lastName;
+      this.token = userData.token;
+      localStorage.setItem("token", userData.token);
       localStorage.setItem("id", userData.id);
     },
     logout() {
@@ -48,7 +51,10 @@ export const useUserStore = defineStore("user", {
       this.firstName = "";
       this.lastName = "";
       this.favoritesCount = 0;
+      this.token = null;
+      localStorage.removeItem("token");
       localStorage.removeItem("id");
+      localStorage.removeItem("favoriteProducts");
     }
   }
 });

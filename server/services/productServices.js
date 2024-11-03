@@ -4,10 +4,18 @@ const User = require("../models/User");
 
 const create = data => Product.create(data);
 const getAll = () => Product.find({});
-const getTop10 = () =>
-  Product.find({})
-    .sort([["rating", "desc"]])
-    .limit(10);
+const getTop10 = async () => {
+  console.log("Getting top 10 products");
+  const products = await Product.find({})
+    .sort({ rating: -1 })
+    .limit(10)
+    .populate("creator")
+    .populate("votes")
+    .lean();
+  
+  console.log("Found products:", products.length);
+  return products;
+};
 const getOne = id => Product.findById(id).populate("creator").populate("votes");
 const deleteRecord = id => Product.deleteOne({ _id: id });
 
@@ -101,19 +109,11 @@ const removeFavorite = async (productId, userId) => {
       throw new Error("User not found");
     }
 
-    console.log("Current favorites:", user.favorites);
+    const mongoose = require("mongoose");
+    const productObjectId = new mongoose.Types.ObjectId(productId);
     
-    // Проверяваме дали продуктът съществува във favorites
-    const productExists = user.favorites.some(fav => fav.toString() === productId);
-    console.log("Product exists in favorites:", productExists);
-
-    if (!productExists) {
-      console.log("Product not found in favorites");
-      throw new Error("Product not in favorites");
-    }
-
-    // Премахваме продукта
-    user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
+    console.log("Current favorites:", user.favorites);
+    user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
     console.log("New favorites array:", user.favorites);
 
     await user.save();

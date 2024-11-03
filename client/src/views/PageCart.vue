@@ -131,4 +131,14 @@ export default {
   border: none;
   cursor: pointer;
 }
+.quantity-controls > span:nth-child(2) {
+  margin: 0 7px;
+  font-weight: bold;
+}
+.quantity-controls {
+  margin-left: 5px;
+}
+.order-summary > button:nth-child(4) {
+  margin-top: 10px;
+}
 </style>

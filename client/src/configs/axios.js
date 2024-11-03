@@ -2,9 +2,16 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  // Заменяме process.env с директен достъп до VUE_APP променливата
-  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:5000",
+  baseURL: "http://localhost:5000",
   withCredentials: true
+});
+
+axiosInstance.interceptors.request.use(config => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default axiosInstance;

@@ -5,7 +5,7 @@ export async function getProducts(params = {}) {
   try {
     console.log("Fetching products with params:", params);
     const queryString = new URLSearchParams();
-    
+
     // Добавяне на параметрите към URL
     Object.entries(params).forEach(([key, value]) => {
       if (value !== "" && value !== null && value !== undefined) {
@@ -15,7 +15,7 @@ export async function getProducts(params = {}) {
 
     const url = `/products?${queryString.toString()}`;
     console.log("Request URL:", url);
-    
+
     const res = await axiosInstance.get(url);
     console.log("Products response:", res.data);
     return res.data;
@@ -27,10 +27,20 @@ export async function getProducts(params = {}) {
 
 export async function getProduct(id) {
   try {
+    console.log("Fetching product details for ID:", id);
     const res = await axiosInstance.get(`/details/${id}`);
+    
+    // Запазваме статуса в localStorage
+    if (res.data.isInFavorites !== undefined) {
+      const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+      favoriteProducts[id] = res.data.isInFavorites;
+      localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
+    }
+    
+    console.log("Product details response:", res.data);
     return res.data;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching product:", error);
     return null;
   }
 }
@@ -140,6 +150,30 @@ export async function searchProducts({ query, page = 1, limit = 10, sortBy = "cr
     return res.data;
   } catch (error) {
     console.log(error);
+    return null;
+  }
+}
+
+export async function getTop10Products() {
+  try {
+    console.log("Fetching top 10 products");
+    const res = await axiosInstance.get("/top-10");
+    console.log("Top 10 response:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching top 10 products:", error);
+    return null;
+  }
+}
+
+export async function toggleFavorite(id) {
+  try {
+    console.log("Toggling favorite for product:", id);
+    const res = await axiosInstance.post(`/products/favorites/toggle/${id}`);
+    console.log("Toggle response:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error toggling favorite:", error);
     return null;
   }
 }

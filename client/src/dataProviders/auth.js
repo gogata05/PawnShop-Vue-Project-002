@@ -4,6 +4,10 @@ import axiosInstance from "../configs/axios";
 export async function loginUser(userData, type) {
   try {
     const res = await axiosInstance.post(`/users/${type}`, userData);
+    if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
+      console.log("Token saved:", res.data.token);
+    }
     return res.data;
   } catch (error) {
     let backendError = error.response.data.error;
@@ -13,6 +17,7 @@ export async function loginUser(userData, type) {
 
 export async function logoutUser() {
   try {
+    localStorage.removeItem("token");
     const res = await axiosInstance.get("/users/logout");
     return res.data;
   } catch (error) {

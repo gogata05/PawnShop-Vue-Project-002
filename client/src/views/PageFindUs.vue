@@ -4,12 +4,12 @@ export default {
   name: "App",
   data() {
     return {
-      center: { lat: 42.63612256076243, lng: 23.36976168577798 },
+      center: { lat: 42.6844, lng: 23.3192 },
       markers: [
         {
           position: {
-            lat: 42.63612256076243,
-            lng: 23.36976168577798
+            lat: 42.6844,
+            lng: 23.3192
           }
         }
       ]

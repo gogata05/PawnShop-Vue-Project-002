@@ -8,7 +8,7 @@ import PageNotFound from "../views/PageNotFound.vue";
 import PageAddProduct from "../views/PageAddProduct.vue";
 import PageEditProduct from "../views/PageEditProduct.vue";
 import PageFindUs from "../views/PageFindUs.vue";
-import PageProducts from "../views/PageProducts.vue";
+import PageTop10 from "../views/PageTop10.vue";
 import PageProductDetails from "../views/PageProductDetails.vue";
 import PageHelp from "../views/PageHelp.vue";
 import PageSearch from "../views/PageAllProducts.vue";
@@ -42,7 +42,7 @@ const routes = [
   },
   {
     path: "/top-10",
-    component: PageProducts,
+    component: PageTop10,
     name: "Top10"
   },
   {

@@ -74,12 +74,19 @@ export default {
         const response = await axiosInstance.delete(`/products/favorites/${productId}`);
         console.log("Server response:", response.data);
         
-        // Презареждаме favorites
-        await loadFavorites();
-        console.log("Favorites reloaded after removal");
+        if (response.data.message) {
+          // Актуализираме локалния списък
+          favorites.value = favorites.value.filter(product => product._id !== productId);
+          // Актуализираме брояча в store
+          userStore.favoritesCount = favorites.value.length;
+          
+          console.log("Product removed successfully");
+        }
       } catch (error) {
         console.error("Error in removeFromFavorites:", error);
-        console.error("Error details:", error.response?.data);
+        if (error.response) {
+          console.error("Error details:", error.response.data);
+        }
       }
     };
 

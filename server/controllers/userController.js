@@ -22,11 +22,10 @@ router.post("/login", isAlreadyLogged, async (req, res) => {
     } else {
       let token = await authServices.createToken(user);
 
-      res.cookie(TOKEN_COOKIE_NAME, token, {
-        httpOnly: true,
-        sameSite: "lax"
-      });
+      console.log("Generated token:", token);
+
       res.json({
+        token,
         user: email,
         id: user._id,
         firstName: user.firstName,
@@ -41,26 +40,22 @@ router.post("/login", isAlreadyLogged, async (req, res) => {
 router.post("/register", isAlreadyLogged, async (req, res) => {
   let { firstName, lastName, email, password, rePassword } = req.body;
 
-  email = email.toLowerCase();
-
   try {
-    if (firstName && lastName) {
-      firstName = firstName[0].toUpperCase() + firstName.substring(1).toLowerCase();
-
-      lastName = lastName[0].toUpperCase() + lastName.substring(1).toLowerCase();
-    }
-
     if (password !== rePassword) {
       res.status(401).json({ error: "Both passwords must be the same!" });
     } else {
-      await authServices.register(firstName, lastName, email, password);
-      let user = await authServices.login(email, password);
+      const user = await authServices.register(firstName, lastName, email, password);
       let token = await authServices.createToken(user);
 
-      res.cookie(TOKEN_COOKIE_NAME, token, {
-        httpOnly: true
+      console.log("Generated token:", token);
+
+      res.json({ 
+        token,
+        user: email, 
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName
       });
-      res.json({ user: email, id: user._id });
     }
   } catch (error) {
     res.status(401).json({ error: errorHandler(error) });
