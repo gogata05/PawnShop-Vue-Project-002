@@ -37,7 +37,7 @@ Post http://localhost:5000/seed or npm run seed
 
 ## Photos
 
-All Posts page with pagination:
+All Posts page sorting and ordering:
 
 ![image](/client/public/pics/AllProductsPage.png)
 
@@ -64,14 +64,6 @@ Comments on Post:
 Likes and Dislikes on Post:
 
 ![image](/client/public/pics/DetailspagewithLikesandDislikes.png)
-
-Error 404:
-
-![image](/client/public/pics/404.png)
-
-Register page:
-
-![image](/client/public/pics/Register.png)
 
 Add Post page:
 
@@ -104,6 +96,14 @@ Orders:
 Help page:
 
 ![image](/client/public/pics/HelpPage.png)
+
+Error 404:
+
+![image](/client/public/pics/404.png)
+
+Register page:
+
+![image](/client/public/pics/Register.png)
 
 Login:
 
