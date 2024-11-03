@@ -91,19 +91,38 @@ const search = async ({ filters, page, limit, sortBy, sortOrder }) => {
 
 const removeFavorite = async (productId, userId) => {
   try {
+    console.log("ProductServices: Removing favorite");
+    console.log("ProductID:", productId);
+    console.log("UserID:", userId);
+
     const user = await User.findById(userId);
     if (!user) {
+      console.log("User not found in productServices");
       throw new Error("User not found");
     }
 
-    // Премахваме продукта от favorites
+    console.log("Current favorites:", user.favorites);
+    
+    // Проверяваме дали продуктът съществува във favorites
+    const productExists = user.favorites.some(fav => fav.toString() === productId);
+    console.log("Product exists in favorites:", productExists);
+
+    if (!productExists) {
+      console.log("Product not found in favorites");
+      throw new Error("Product not in favorites");
+    }
+
+    // Премахваме продукта
     user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
+    console.log("New favorites array:", user.favorites);
+
     await user.save();
+    console.log("User saved successfully in productServices");
     
     return true;
   } catch (error) {
-    console.error("Error removing favorite:", error);
-    throw error; // Прехвърляме грешката нагоре
+    console.error("Error in productServices removeFavorite:", error);
+    throw error;
   }
 };
 

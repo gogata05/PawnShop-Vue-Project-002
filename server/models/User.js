@@ -77,6 +77,17 @@ userSchema.pre("findOne", function() {
   this.populate("favorites");
 });
 
+userSchema.pre("save", function(next) {
+  console.log("Pre-save hook triggered");
+  console.log("Favorites to save:", this.favorites);
+  next();
+});
+
+userSchema.post("save", function(doc) {
+  console.log("Post-save hook triggered");
+  console.log("Saved favorites:", doc.favorites);
+});
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

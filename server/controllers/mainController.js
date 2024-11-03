@@ -297,22 +297,23 @@ router.delete("/products/favorites/:productId", isAuth, async (req, res) => {
     const productId = req.params.productId;
     const userId = req.user._id;
     
-    console.log("Removing favorite - ProductID:", productId, "UserID:", userId);
+    console.log("Removing favorite - ProductID:", productId);
+    console.log("UserID:", userId);
     
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
+    const result = await productServices.removeFavorite(productId, userId);
+    
+    if (result) {
+      const updatedUser = await authServices.getUserById(userId);
+      res.json({ 
+        message: "Product removed from favorites",
+        newCount: updatedUser.favorites.length 
+      });
+    } else {
+      res.status(400).json({ error: "Failed to remove from favorites" });
     }
-
-    // Премахваме продукта от favorites
-    user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
-    await user.save();
-    
-    console.log("Favorite removed successfully");
-    res.json({ message: "Product removed from favorites" });
   } catch (error) {
-    console.error("Error removing favorite:", error);
-    res.status(500).json({ error: "Failed to remove from favorites" });
+    console.error("Error in remove favorites:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 

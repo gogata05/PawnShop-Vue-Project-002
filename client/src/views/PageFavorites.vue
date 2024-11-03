@@ -47,11 +47,15 @@ export default {
 
     const loadFavorites = async () => {
       try {
+        console.log("Loading favorites...");
         isLoading.value = true;
         const profile = await getProfile();
+        console.log("Profile loaded:", profile);
+        
         if (profile) {
           favorites.value = profile.favorites || [];
           userStore.favoritesCount = favorites.value.length;
+          console.log("Updated favorites:", favorites.value);
         }
       } catch (error) {
         console.error("Error loading favorites:", error);
@@ -66,12 +70,16 @@ export default {
 
     const removeFromFavorites = async productId => {
       try {
-        console.log("Removing product:", productId);
+        console.log("Starting removal process for product:", productId);
         const response = await axiosInstance.delete(`/products/favorites/${productId}`);
-        console.log("Remove response:", response);
-        await loadFavorites(); // Презареждаме списъка след успешно премахване
+        console.log("Server response:", response.data);
+        
+        // Презареждаме favorites
+        await loadFavorites();
+        console.log("Favorites reloaded after removal");
       } catch (error) {
-        console.error("Error removing from favorites:", error);
+        console.error("Error in removeFromFavorites:", error);
+        console.error("Error details:", error.response?.data);
       }
     };
 
