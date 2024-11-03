@@ -5,7 +5,7 @@ export async function getProducts(params = {}) {
   try {
     console.log("Fetching products with params:", params);
     const queryString = new URLSearchParams();
-    
+
     // Добавяне на параметрите към URL
     Object.entries(params).forEach(([key, value]) => {
       if (value !== "" && value !== null && value !== undefined) {
@@ -15,7 +15,7 @@ export async function getProducts(params = {}) {
 
     const url = `/products?${queryString.toString()}`;
     console.log("Request URL:", url);
-    
+
     const res = await axiosInstance.get(url);
     console.log("Products response:", res.data);
     return res.data;
@@ -140,6 +140,18 @@ export async function searchProducts({ query, page = 1, limit = 10, sortBy = "cr
     return res.data;
   } catch (error) {
     console.log(error);
+    return null;
+  }
+}
+
+export async function getTop10Products() {
+  try {
+    console.log("Fetching top 10 products");
+    const res = await axiosInstance.get("/top-10");
+    console.log("Top 10 response:", res.data);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching top 10 products:", error);
     return null;
   }
 }

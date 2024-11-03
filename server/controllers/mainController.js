@@ -26,8 +26,10 @@ router.get("/all-products", async (req, res) => {
 
 router.get("/top-10", async (req, res) => {
   try {
-    const products = await Product.find().sort({ rating: -1 }).limit(10).lean();
-
+    console.log("Fetching top 10 products");
+    const products = await productServices.getTop10();
+    console.log("Found products:", products.length);
+    
     res.json({ products });
   } catch (error) {
     console.error("Error fetching top products:", error);

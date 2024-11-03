@@ -4,10 +4,18 @@ const User = require("../models/User");
 
 const create = data => Product.create(data);
 const getAll = () => Product.find({});
-const getTop10 = () =>
-  Product.find({})
-    .sort([["rating", "desc"]])
-    .limit(10);
+const getTop10 = async () => {
+  console.log("Getting top 10 products");
+  const products = await Product.find({})
+    .sort({ rating: -1 })
+    .limit(10)
+    .populate("creator")
+    .populate("votes")
+    .lean();
+  
+  console.log("Found products:", products.length);
+  return products;
+};
 const getOne = id => Product.findById(id).populate("creator").populate("votes");
 const deleteRecord = id => Product.deleteOne({ _id: id });
 
