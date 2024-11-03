@@ -24,7 +24,8 @@ export default {
       productData: {},
       isLoading: true,
       userData: { comment: "" },
-      quantity: 1 // Добавено поле за количество
+      quantity: 1,
+      isFavorite: false // Добавяме ново поле
     };
   },
   async created() {
@@ -38,7 +39,18 @@ export default {
   methods: {
     async loadData() {
       this.isLoading = true;
+      
+      // Зареждаме запазения статус от localStorage
+      const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+      const savedStatus = favoriteProducts[this.$route.params.id];
+      
       this.productData = await getProduct(this.$route.params.id);
+      
+      // Използваме запазения статус или статуса от сървъра
+      this.productData.isInFavorites = savedStatus !== undefined 
+        ? savedStatus 
+        : this.productData.isInFavorites;
+      
       this.isLoading = false;
     },
     async deleteProduct() {
@@ -71,10 +83,14 @@ export default {
           // Обръщаме статуса локално
           this.productData.isInFavorites = !this.productData.isInFavorites;
           
+          // Актуализираме localStorage
+          const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+          favoriteProducts[this.productData.product._id] = this.productData.isInFavorites;
+          localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
+          
           // Актуализираме брояча в store
           this.userStore.favoritesCount = response.newCount;
           
-          // Показваме съобщение
           const message = this.productData.isInFavorites 
             ? "Product added to favorites!" 
             : "Product removed from favorites!";
@@ -106,6 +122,11 @@ export default {
         color: this.productData.product["rating"] === 0 ? "black" : this.productData.product["rating"] > 0 ? "orange" : "red"
       };
     }
+  },
+  // Добавяме cleanup при унищожаване на компонента
+  beforeUnmount() {
+    // Опционално: Изчистваме localStorage ако е необходимо
+    // localStorage.removeItem("favoriteProducts");
   }
 };
 </script>

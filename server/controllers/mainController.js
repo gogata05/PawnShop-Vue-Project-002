@@ -76,35 +76,22 @@ router.post("/edit/:id", isAuth, async (req, res) => {
 router.get("/details/:id", async (req, res) => {
   try {
     let product = await productServices.getOne(req.params.id);
-
-    if (!product) {
-      return res.status(404).json({ error: "Product not found" });
-    }
-
-    let user = null;
-    if (req.user && req.user._id) {
-      user = await User.findById(req.user._id);
-    }
-
-    let voted = false;
-    if (req.user && req.user._id && product.votes && product.votes.length > 0) {
-      voted = product.votes.some(x => x && x._id && x._id.toString() === req.user._id);
-    }
-
-    let isOwnedBy = false;
-    if (req.user && req.user._id && product.creator && product.creator._id) {
-      isOwnedBy = product.creator._id.toString() === req.user._id;
-    }
-
     let isInFavorites = false;
-    if (user && user.favorites && user.favorites.length > 0) {
-      isInFavorites = user.favorites.some(x => product._id.toString() === x.toString());
+
+    if (req.user) {
+      const user = await User.findById(req.user._id);
+      isInFavorites = user.favorites.some(favId => 
+        favId.equals(product._id)
+      );
     }
 
-    res.json({ product, voted, isOwnedBy, isInFavorites });
+    res.json({
+      product,
+      isInFavorites,
+      voted: product.votes.some(v => v?._id.toString() === req?.user?._id)
+    });
   } catch (error) {
-    console.log(error);
-    res.json({ error: errorHandler(error) });
+    res.status(400).json({ error: errorHandler(error) });
   }
 });
 

@@ -54,6 +54,7 @@ export const useUserStore = defineStore("user", {
       this.token = null;
       localStorage.removeItem("token");
       localStorage.removeItem("id");
+      localStorage.removeItem("favoriteProducts");
     }
   }
 });

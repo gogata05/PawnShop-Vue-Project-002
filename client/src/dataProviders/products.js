@@ -27,10 +27,20 @@ export async function getProducts(params = {}) {
 
 export async function getProduct(id) {
   try {
+    console.log("Fetching product details for ID:", id);
     const res = await axiosInstance.get(`/details/${id}`);
+    
+    // Запазваме статуса в localStorage
+    if (res.data.isInFavorites !== undefined) {
+      const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
+      favoriteProducts[id] = res.data.isInFavorites;
+      localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
+    }
+    
+    console.log("Product details response:", res.data);
     return res.data;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching product:", error);
     return null;
   }
 }
