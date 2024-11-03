@@ -46,12 +46,22 @@ export default {
       
       this.productData = await getProduct(this.$route.params.id);
       
+      // Проверяваме дали текущият потребител е създател на продукта
+      const userId = localStorage.getItem("id");
+      this.productData.isOwnedBy = this.productData.product.creator._id === userId;
+      
       // Използваме запазения статус или статуса от сървъра
       this.productData.isInFavorites = savedStatus !== undefined 
         ? savedStatus 
         : this.productData.isInFavorites;
       
       this.isLoading = false;
+      
+      console.log("Product owner check:", {
+        productCreatorId: this.productData.product.creator._id,
+        currentUserId: userId,
+        isOwnedBy: this.productData.isOwnedBy
+      });
     },
     async deleteProduct() {
       const isConfirmed = confirm("Are you sure you want to delete this product?");
@@ -164,6 +174,12 @@ export default {
                 <button class="cart-btn" @click="addToCart">Add to Cart</button>
                 <input type="number" v-model.number="quantity" min="1" />
               </div>
+            </div>
+
+            <!-- Добавяме нов div за бутоните Edit и Delete -->
+            <div class="project-info-box mybuttons" v-if="productData.isOwnedBy && isAuthenticated">
+              <router-link :to="`/details/${productData.product._id}/edit`" class="dark-btn">Edit</router-link>
+              <button class="danger-btn" @click="deleteProduct">Delete</button>
             </div>
 
             <div v-if="isAuthenticated">

@@ -77,17 +77,27 @@ router.get("/details/:id", async (req, res) => {
   try {
     let product = await productServices.getOne(req.params.id);
     let isInFavorites = false;
+    let isOwnedBy = false;
 
     if (req.user) {
       const user = await User.findById(req.user._id);
       isInFavorites = user.favorites.some(favId => 
         favId.equals(product._id)
       );
+      isOwnedBy = product.creator._id.toString() === req.user._id.toString();
     }
+
+    console.log("Product details:", {
+      productId: product._id,
+      creatorId: product.creator._id,
+      userId: req.user?._id,
+      isOwnedBy
+    });
 
     res.json({
       product,
       isInFavorites,
+      isOwnedBy,
       voted: product.votes.some(v => v?._id.toString() === req?.user?._id)
     });
   } catch (error) {
