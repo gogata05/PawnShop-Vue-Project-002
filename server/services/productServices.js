@@ -109,19 +109,11 @@ const removeFavorite = async (productId, userId) => {
       throw new Error("User not found");
     }
 
-    console.log("Current favorites:", user.favorites);
+    const mongoose = require("mongoose");
+    const productObjectId = new mongoose.Types.ObjectId(productId);
     
-    // Проверяваме дали продуктът съществува във favorites
-    const productExists = user.favorites.some(fav => fav.toString() === productId);
-    console.log("Product exists in favorites:", productExists);
-
-    if (!productExists) {
-      console.log("Product not found in favorites");
-      throw new Error("Product not in favorites");
-    }
-
-    // Премахваме продукта
-    user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
+    console.log("Current favorites:", user.favorites);
+    user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
     console.log("New favorites array:", user.favorites);
 
     await user.save();

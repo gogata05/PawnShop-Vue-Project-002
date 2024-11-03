@@ -29,7 +29,7 @@ router.get("/top-10", async (req, res) => {
     console.log("Fetching top 10 products");
     const products = await productServices.getTop10();
     console.log("Found products:", products.length);
-    
+
     res.json({ products });
   } catch (error) {
     console.error("Error fetching top products:", error);
@@ -298,25 +298,34 @@ router.delete("/products/favorites/:productId", isAuth, async (req, res) => {
   try {
     const productId = req.params.productId;
     const userId = req.user._id;
-    
+
     console.log("Removing favorite - ProductID:", productId);
     console.log("UserID:", userId);
-    
-    const result = await productServices.removeFavorite(productId, userId);
-    
-    if (result) {
-      const updatedUser = await authServices.getUserById(userId);
-      res.json({ 
-        message: "Product removed from favorites",
-        newCount: updatedUser.favorites.length 
-      });
-    } else {
-      res.status(400).json({ error: "Failed to remove from favorites" });
+
+    const user = await User.findById(userId);
+    if (!user) {
+      console.log("User not found");
+      return res.status(404).json({ error: "User not found" });
     }
+
+    // Конвертираме към ObjectId за сравнение
+    const mongoose = require("mongoose");
+    const productObjectId = new mongoose.Types.ObjectId(productId);
+    
+    console.log("Current favorites:", user.favorites);
+    user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
+    console.log("Updated favorites:", user.favorites);
+
+    await user.save();
+    console.log("User saved successfully");
+
+    res.json({
+      message: "Product removed from favorites",
+      newCount: user.favorites.length
+    });
   } catch (error) {
     console.error("Error in remove favorites:", error);
     res.status(500).json({ error: error.message });
   }
 });
-
 module.exports = router;

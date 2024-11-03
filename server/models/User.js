@@ -79,7 +79,20 @@ userSchema.pre("findOne", function() {
 
 userSchema.pre("save", function(next) {
   console.log("Pre-save hook triggered");
-  console.log("Favorites to save:", this.favorites);
+  console.log("Favorites before:", this.favorites);
+  
+  // Конвертираме всички ID-та към ObjectId
+  const mongoose = require("mongoose");
+  this.favorites = this.favorites.map(id => 
+    typeof id === "string" ? new mongoose.Types.ObjectId(id) : id
+  );
+  
+  // Премахваме дубликати използвайки equals метода
+  this.favorites = this.favorites.filter((id, index, self) =>
+    index === self.findIndex(t => t.equals(id))
+  );
+  
+  console.log("Favorites after:", this.favorites);
   next();
 });
 
