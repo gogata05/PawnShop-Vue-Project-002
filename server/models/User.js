@@ -68,6 +68,15 @@ userSchema.pre("save", function (next) {
 userSchema.method("validatePassword", function (password) {
   return bcrypt.compare(password, this.password);
 });
+
+userSchema.pre("find", function() {
+  this.populate("favorites");
+});
+
+userSchema.pre("findOne", function() {
+  this.populate("favorites");
+});
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

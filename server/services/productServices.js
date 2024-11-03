@@ -92,12 +92,18 @@ const search = async ({ filters, page, limit, sortBy, sortOrder }) => {
 const removeFavorite = async (productId, userId) => {
   try {
     const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Премахваме продукта от favorites
     user.favorites = user.favorites.filter(fav => fav.toString() !== productId);
     await user.save();
+    
     return true;
   } catch (error) {
     console.error("Error removing favorite:", error);
-    return false;
+    throw error; // Прехвърляме грешката нагоре
   }
 };
 

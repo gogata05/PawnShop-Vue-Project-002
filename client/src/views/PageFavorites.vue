@@ -33,7 +33,7 @@ import { useCartStore } from "../store/cartStore";
 import { useToast } from "vue-toastification";
 import Loader from "../components/Loader.vue";
 import { getProfile } from "../dataProviders/auth";
-import { favoriteProduct } from "../dataProviders/products";
+import axiosInstance from "../configs/axios";
 
 export default {
   name: "PageFavorites",
@@ -55,7 +55,6 @@ export default {
         }
       } catch (error) {
         console.error("Error loading favorites:", error);
-        toast.error("Failed to load favorites");
       } finally {
         isLoading.value = false;
       }
@@ -67,11 +66,12 @@ export default {
 
     const removeFromFavorites = async productId => {
       try {
-        await favoriteProduct(productId);
-        await loadFavorites();
+        console.log("Removing product:", productId);
+        const response = await axiosInstance.delete(`/products/favorites/${productId}`);
+        console.log("Remove response:", response);
+        await loadFavorites(); // Презареждаме списъка след успешно премахване
       } catch (error) {
         console.error("Error removing from favorites:", error);
-        toast.error("Failed to remove from favorites");
       }
     };
 
