@@ -101,6 +101,10 @@ Error 404:
 
 ![image](/client/public/pics/404.png)
 
+Footer and Pagination:
+
+![image](/client/public/pics/FooterAndPagination.png)
+
 Register page:
 
 ![image](/client/public/pics/Register.png)
