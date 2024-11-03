@@ -20,7 +20,7 @@ Features:
 - pagination
 - Likes,Dislikes
 - Comments
-- Favourites
+- Favorites
 - Change Account information //change password/email/first name/last name
 - Home page recent added products Slider
 - Select your user type:Buyer or Pawn Shop //for Home page and Help page
