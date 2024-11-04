@@ -335,6 +335,18 @@ h2 {
 .image-container {
   position: relative;
   width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-height: 500px;
+  max-width: 800px;
+  margin: 0 auto;
+  display: block;
 }
 
 .favorite-icon {
@@ -500,14 +512,13 @@ button,
   }
 
   .image-container {
-    max-width: 0%;
+    height: 400px;
+    max-width: 100%;
   }
 
   .image-container img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 5px;
+    max-height: 400px;
+    max-width: 600px;
   }
 
   .project-comment-box {
@@ -553,13 +564,12 @@ button,
   }
 
   .image-container {
-    min-width: 100%;
-    height: auto;
+    height: 300px;
   }
 
   .image-container img {
-    width: 100%;
-    height: auto;
+    max-height: 300px;
+    max-width: 100%;
   }
 
   textarea {
