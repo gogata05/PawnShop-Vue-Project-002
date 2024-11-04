@@ -15,7 +15,8 @@ const app = express();
 // Middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Заменете origin, ако е необходимо
+// app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "*" }));
 
 // Routes
 app.use(auth);
