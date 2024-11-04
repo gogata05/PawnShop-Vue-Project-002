@@ -38,7 +38,7 @@ app.post("/seed", async (req, res) => {
 // Инициализиране на базата данни и стартиране на сървъра
 initDatabase(process.env.DB_CONNECTION_STRING)
   .then(() => {
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT;
     app.listen(PORT, () => {
       console.log(`Server is listening at http://localhost:${PORT}`);
     });
