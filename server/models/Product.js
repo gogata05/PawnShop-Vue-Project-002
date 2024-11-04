@@ -48,7 +48,12 @@ const productSchema = new mongoose.Schema(
       ref: "User"
     }],
     comments: [{
-      type: String
+      text: String,
+      author: String,
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
     }]
   },
   { timestamps: true }
