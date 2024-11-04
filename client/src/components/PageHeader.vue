@@ -27,7 +27,8 @@
     <div class="welcome" v-if="isAuthenticated" ref="container">
       <div class="user-info" @click="toggleDropdown">
         <span>Welcome, </span>
-        <span class="email">{{ email }}</span>
+        <span v-if="isLoading">Loading...</span>
+        <span v-else class="email">{{ email }}</span>
       </div>
       <div class="favorites-icon" @click="goToFavorites">
         <font-awesome-icon :icon="['far', 'heart']" :class="{ active: isInFavoritesPage }" />
@@ -61,7 +62,7 @@
 import { useUserStore } from "../store/userStore";
 import { useCartStore } from "../store/cartStore";
 import { logoutUser } from "../dataProviders/auth";
-import { ref, onMounted, onUnmounted, computed } from "vue";
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 export default {
@@ -96,10 +97,16 @@ export default {
     });
 
     const isAuthenticated = computed(() => userStore.isAuthenticated);
-    const email = computed(() => userStore.email);
+    const email = computed(() => {
+      console.log("Current email value:", userStore.email);
+      return userStore.email;
+    });
     const itemCount = computed(() => cartStore.itemCount);
     const isCartPage = computed(() => route.name === "Cart");
-    const favoritesCount = computed(() => userStore.favoritesCount);
+    const favoritesCount = computed(() => {
+      console.log("Current favorites count:", userStore.favoritesCount);
+      return userStore.favoritesCount;
+    });
     const isInFavoritesPage = computed(() => route.path === "/favorites");
 
     const redirectToHome = () => {
@@ -120,6 +127,16 @@ export default {
       router.push("/favorites");
     };
 
+    watch(
+      () => userStore.isAuthenticated,
+      async (newValue) => {
+        if (newValue) {
+          console.log("Auth state changed, refreshing profile...");
+          await userStore.getPersistedProfile();
+        }
+      }
+    );
+
     return {
       showDropdown,
       toggleDropdown,
@@ -134,7 +151,8 @@ export default {
       isCartPage,
       favoritesCount,
       isInFavoritesPage,
-      goToFavorites
+      goToFavorites,
+      isLoading: computed(() => userStore.isLoading)
     };
   }
 };
