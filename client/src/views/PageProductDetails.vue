@@ -792,4 +792,23 @@ textarea {
 .comment-btn:hover {
   background: #0056b3;
 }
+
+/* Добавете тези стилове в секцията <style scoped> */
+.mybuttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.mybuttons .dark-btn,
+.mybuttons .danger-btn {
+  width: 120px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 16px;
+}
 </style>

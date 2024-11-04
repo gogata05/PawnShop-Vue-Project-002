@@ -38,9 +38,9 @@ Post http://localhost:5000/seed or npm run seed
 
 ## Photos
 
-All Posts page sorting and ordering:
+All Posts page with sorting, ordering & start rating system:
 
-![image](/client/public/pics/AllProductsPage.png)
+![image](/client/public/pics/allProductsWithStarRatings.png)
 
 Recently Added Posts in Home page:
 
