@@ -1,42 +1,52 @@
 <!-- client/src/views/PageCart.vue (нов файл) -->
 <template>
   <div class="cart-container">
-    <h1>Your Cart</h1>
-    <div v-if="cartItems.length > 0">
-      <div class="cart-item" v-for="item in cartItems" :key="item.product._id">
-        <img :src="item.product.imgUrl" alt="Product Image" />
-        <div class="item-details">
-          <h3>{{ item.product.brand }} {{ item.product.model }}</h3>
-          <p class="price">€{{ item.product.price }}</p>
-          <div class="quantity-controls">
-            <button class="quantity-btn" @click="decreaseQuantity(item.product._id)">
-              <font-awesome-icon icon="minus" />
-            </button>
-            <span>{{ item.quantity }}</span>
-            <button class="quantity-btn" @click="increaseQuantity(item.product._id)">
-              <font-awesome-icon icon="plus" />
-            </button>
+    <div v-if="cartItems.length > 0" class="cart-layout">
+      <div class="cart-items-section">
+        <div class="cart-item" v-for="item in cartItems" :key="item.product._id">
+          <img :src="item.product.imgUrl" alt="Product Image" />
+          <div class="item-details">
+            <h3>{{ item.product.brand }} {{ item.product.model }}</h3>
+            <p class="price">€{{ item.product.price }}</p>
+            <div class="quantity-controls">
+              <button class="quantity-btn" @click="decreaseQuantity(item.product._id)">
+                <font-awesome-icon icon="minus" />
+              </button>
+              <span>{{ item.quantity }}</span>
+              <button class="quantity-btn" @click="increaseQuantity(item.product._id)">
+                <font-awesome-icon icon="plus" />
+              </button>
+            </div>
+            <button class="remove-btn" @click="removeItem(item.product._id)"><font-awesome-icon icon="trash" /> Remove</button>
           </div>
-          <button class="remove-btn" @click="removeItem(item.product._id)"><font-awesome-icon icon="trash" /> Remove</button>
         </div>
       </div>
+
       <div class="order-summary">
-        <h2>Order Summary</h2>
-        <div class="summary-details">
-          <div class="summary-row">
-            <span>Total Items:</span>
-            <span>{{ totalItems }}</span>
+        <div class="summary-sticky">
+          <h2>Order Summary</h2>
+          <div class="summary-details">
+            <div class="summary-row">
+              <span>Total Items:</span>
+              <span>{{ totalItems }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span>€{{ totalPrice }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping:</span>
+              <span>Free</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span class="total-price">€{{ totalPrice }}</span>
+            </div>
           </div>
-          <div class="summary-row">
-            <span>Total Price:</span>
-            <span class="total-price">€{{ totalPrice.toFixed(2) }}</span>
-          </div>
+          <button class="checkout-btn" @click="checkout"><font-awesome-icon icon="shopping-cart" /> Proceed to Checkout</button>
+          <div class="secure-checkout"><font-awesome-icon icon="lock" /> Secure Checkout</div>
         </div>
-        <button class="checkout-btn" @click="checkout">Proceed to Checkout</button>
       </div>
-    </div>
-    <div v-else>
-      <p>Your cart is empty.</p>
     </div>
   </div>
 </template>
@@ -104,13 +114,26 @@ export default {
 
 <style scoped>
 .cart-container {
-  max-width: 1200px;
-  margin: 70px auto;
+  max-width: 1400px;
+  margin: 100px auto 40px auto;
   padding: 40px 20px;
   background-color: #f8f9fa;
   min-height: 80vh;
-  /* zoom out the page */
-  /* transform: scale(0.97); */
+  /* zoom in the page */
+  transform: scale(1.01);
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 30px;
+  align-items: start;
+}
+
+.cart-items-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .cart-item {
@@ -197,23 +220,45 @@ export default {
 }
 
 .order-summary {
+  position: relative;
+  height: 100%;
+}
+
+.summary-sticky {
+  /* position: sticky; */
+  top: 20px;
   background: white;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  margin-left: auto;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.summary-sticky h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
 }
 
 .summary-details {
-  margin: 20px 0;
+  margin: 25px 0;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  margin: 10px 0;
-  font-size: 1.1rem;
+  margin: 12px 0;
+  font-size: 1rem;
+  color: #4a5568;
+}
+
+.summary-row.total {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+  font-weight: 600;
+  font-size: 1.2rem;
 }
 
 .total-price {
@@ -224,7 +269,7 @@ export default {
 
 .checkout-btn {
   width: 100%;
-  padding: 15px;
+  padding: 16px;
   background-color: #4caf50;
   color: white;
   border: none;
@@ -232,30 +277,43 @@ export default {
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .checkout-btn:hover {
   background-color: #45a049;
+  transform: translateY(-1px);
+}
+
+.secure-checkout {
+  text-align: center;
+  margin-top: 15px;
+  color: #718096;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+@media (max-width: 1024px) {
+  .cart-layout {
+    grid-template-columns: 1fr 320px;
+  }
 }
 
 @media (max-width: 768px) {
-  .cart-item {
-    flex-direction: column;
+  .cart-layout {
+    grid-template-columns: 1fr;
   }
 
-  .cart-item img {
-    width: 100%;
-    height: 200px;
-    margin-bottom: 20px;
-  }
-
-  .item-details {
-    margin-left: 0;
-  }
-
-  .order-summary {
-    margin: 30px auto;
+  .summary-sticky {
+    position: static;
+    margin-top: 30px;
   }
 }
 </style>
