@@ -31,7 +31,7 @@ export default {
   },
   data() {
     return {
-      userType: "buyer", // Default user type
+      userType: "buyer",
       buyerFaq: [
         { title: "How do I buy an item?", description: "To buy an item, simply browse through the available products and add your desired item to the shopping cart. After reviewing your cart, you can proceed to checkout, where you will be prompted to enter your shipping and payment details." },
         { title: "Can I return an item?", description: "Returns depend on the pawn shop’s specific policy. You should check the return conditions listed on the product page or contact the shop directly for more information. Some shops may offer returns within a certain period, while others may not accept returns." },

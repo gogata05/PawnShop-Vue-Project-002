@@ -649,7 +649,6 @@ const seedProducts = [
 
 async function seedDatabase() {
   try {
-    // Създаване на тестов потребител
     const testUser = await User.create({
       firstName: "Test",
       lastName: "User",
@@ -659,17 +658,14 @@ async function seedDatabase() {
 
     console.log("Test user created:", testUser.email);
 
-    // Изтриване на всички съществуващи продукти
     await Product.deleteMany({});
     console.log("Cleaned up old products");
 
-    // Добавяне на creator към всеки продукт
     const productsWithCreator = seedProducts.map(product => ({
       ...product,
       creator: testUser._id
     }));
 
-    // Създаване на новите продукти
     const createdProducts = await Product.create(productsWithCreator);
     console.log(`Created ${createdProducts.length} products`);
 

@@ -6,7 +6,6 @@ export async function getProducts(params = {}) {
     console.log("Fetching products with params:", params);
     const queryString = new URLSearchParams();
 
-    // Добавяне на параметрите към URL
     Object.entries(params).forEach(([key, value]) => {
       if (value !== "" && value !== null && value !== undefined) {
         queryString.append(key, value);
@@ -34,7 +33,6 @@ export async function getProduct(id) {
     console.log("Fetching product details for ID:", id);
     const res = await axiosInstance.get(`/details/${id}`);
 
-    // Запазваме статуса в localStorage
     if (res.data.isInFavorites !== undefined) {
       const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
       favoriteProducts[id] = res.data.isInFavorites;
@@ -132,7 +130,6 @@ export async function getLatestProducts() {
 
 export async function searchProducts({ query, page = 1, limit = 10, sortBy = "createdAt", order = "desc", filters = {} }) {
   try {
-    // Премахваме филтрите със стойност null, undefined или NaN
     const validFilters = {};
     for (const key in filters) {
       const value = filters[key];

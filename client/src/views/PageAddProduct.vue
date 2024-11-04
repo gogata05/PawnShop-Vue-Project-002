@@ -6,7 +6,6 @@ import { addProduct } from "../dataProviders/products";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength, minValue, helpers } from "@vuelidate/validators";
 import Alert from "../components/Alert.vue";
-// Импортиране на useToast
 import { useToast } from "vue-toastification";
 
 const validateLink = value => /^https?:\/\//i.test(value);
@@ -15,7 +14,7 @@ export default {
   components: { Alert },
   setup() {
     const userStore = useUserStore();
-    const toast = useToast(); // Инициализиране на toast
+    const toast = useToast(); 
     return { userStore, v$: useVuelidate(), toast };
   },
   data() {
@@ -52,7 +51,7 @@ export default {
           this.errorNotification = true;
           this.isLoading = false;
         } else {
-          this.toast.success("The Product is created successfully"); // Добавен тост
+          this.toast.success("The Product is created successfully");
           this.$router.push("/all-products");
           this.isLoading = false;
         }

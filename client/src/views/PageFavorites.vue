@@ -75,9 +75,7 @@ export default {
         console.log("Server response:", response.data);
         
         if (response.data.message) {
-          // Актуализираме локалния списък
           favorites.value = favorites.value.filter(product => product._id !== productId);
-          // Актуализираме брояча в store
           userStore.favoritesCount = favorites.value.length;
           
           console.log("Product removed successfully");

@@ -69,34 +69,28 @@ userSchema.method("validatePassword", function (password) {
   return bcrypt.compare(password, this.password);
 });
 
-userSchema.pre("find", function() {
+userSchema.pre("find", function () {
   this.populate("favorites");
 });
 
-userSchema.pre("findOne", function() {
+userSchema.pre("findOne", function () {
   this.populate("favorites");
 });
 
-userSchema.pre("save", function(next) {
+userSchema.pre("save", function (next) {
   console.log("Pre-save hook triggered");
   console.log("Favorites before:", this.favorites);
-  
-  // Конвертираме всички ID-та към ObjectId
+
   const mongoose = require("mongoose");
-  this.favorites = this.favorites.map(id => 
-    typeof id === "string" ? new mongoose.Types.ObjectId(id) : id
-  );
-  
-  // Премахваме дубликати използвайки equals метода
-  this.favorites = this.favorites.filter((id, index, self) =>
-    index === self.findIndex(t => t.equals(id))
-  );
-  
+  this.favorites = this.favorites.map(id => (typeof id === "string" ? new mongoose.Types.ObjectId(id) : id));
+
+  this.favorites = this.favorites.filter((id, index, self) => index === self.findIndex(t => t.equals(id)));
+
   console.log("Favorites after:", this.favorites);
   next();
 });
 
-userSchema.post("save", function(doc) {
+userSchema.post("save", function (doc) {
   console.log("Post-save hook triggered");
   console.log("Saved favorites:", doc.favorites);
 });

@@ -22,7 +22,7 @@ const createToken = function (user) {
   let payload = {
     _id: user._id,
     email: user.email,
-    exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24) // 24 часа валидност
+    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 // 24 hours validity
   };
 
   console.log("Creating token with payload:", payload);

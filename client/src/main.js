@@ -20,10 +20,8 @@ import axiosInstance from "./configs/axios";
 const app = createApp(App);
 const pinia = createPinia();
 
-// Регистрация на иконите в библиотеката
 library.add(faShoppingCart, faPlus, faMinus);
 
-// Регистриране на FontAwesome компонента
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(router);
@@ -38,7 +36,6 @@ app.use(VueGoogleMaps, {
   }
 });
 
-// Add global axios error interceptor
 axiosInstance.interceptors.response.use(
   response => response,
   error => {

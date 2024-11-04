@@ -81,9 +81,7 @@ router.get("/details/:id", async (req, res) => {
 
     if (req.user) {
       const user = await User.findById(req.user._id);
-      isInFavorites = user.favorites.some(favId => 
-        favId.equals(product._id)
-      );
+      isInFavorites = user.favorites.some(favId => favId.equals(product._id));
       isOwnedBy = product.creator._id.toString() === req.user._id.toString();
     }
 
@@ -182,7 +180,7 @@ router.post("/comment/:id", isAuth, async (req, res) => {
   }
   let productId = req.params.id;
   let user = await authServices.getUserById(req.user._id);
-  
+
   try {
     await productServices.comment(productId, {
       text: comment.trim(),
@@ -211,7 +209,7 @@ router.get("/search", async (req, res) => {
   try {
     const { q, page = 1, limit = 10, sortBy = "createdAt", order = "desc", brand, productType, condition, priceMin, priceMax } = req.query;
 
-    console.log("Search Query Parameters:", req.query); // Добавено логиране
+    console.log("Search Query Parameters:", req.query);
 
     const filters = {};
 
@@ -308,10 +306,9 @@ router.delete("/products/favorites/:productId", isAuth, async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Конвертираме към ObjectId за сравнение
     const mongoose = require("mongoose");
     const productObjectId = new mongoose.Types.ObjectId(productId);
-    
+
     console.log("Current favorites:", user.favorites);
     user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
     console.log("Updated favorites:", user.favorites);
@@ -345,15 +342,12 @@ router.post("/products/favorites/toggle/:productId", isAuth, async (req, res) =>
 
     const mongoose = require("mongoose");
     const productObjectId = new mongoose.Types.ObjectId(productId);
-    
-    // Проверяваме дали продуктът е в любими
+
     const isInFavorites = user.favorites.some(favId => favId.equals(productObjectId));
-    
+
     if (isInFavorites) {
-      // Ако е в любими, го премахваме
       user.favorites = user.favorites.filter(favId => !favId.equals(productObjectId));
     } else {
-      // Ако не е в любими, го добавяме
       user.favorites.push(productObjectId);
     }
 

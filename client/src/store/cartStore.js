@@ -1,4 +1,4 @@
-// client/src/store/cartStore.js (нов файл)
+// client/src/store/cartStore.js
 import { defineStore } from "pinia";
 
 export const useCartStore = defineStore("cart", {

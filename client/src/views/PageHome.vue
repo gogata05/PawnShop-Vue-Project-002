@@ -129,19 +129,16 @@ export default {
   },
   data() {
     return {
-      userType: "buyer", // Default user type
-      latestProducts: [], // To store latest products
-      isLoading: true, // Loading state
-      searchQuery: "" // Search query
+      userType: "buyer",
+      latestProducts: [], 
+      isLoading: true,
+      searchQuery: ""
     };
   },
   async created() {
-    await this.loadLatestProducts(); // Load latest products on creation
+    await this.loadLatestProducts(); 
   },
   methods: {
-    /**
-     * Loads the latest added products from the backend.
-     */
     async loadLatestProducts() {
       const data = await getLatestProducts();
       if (data && data.products) {
@@ -152,12 +149,8 @@ export default {
       }
       this.isLoading = false;
     },
-    /**
-     * Performs the search and redirects to the Search page with the query.
-     * Redirects even if the search query is empty.
-     */
+
     performSearch() {
-      // Redirect to the Search page with the search query (can be empty)
       this.$router.push({ name: "Search", query: { q: this.searchQuery.trim() } });
     }
   }

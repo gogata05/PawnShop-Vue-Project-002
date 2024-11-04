@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { searchProducts, getProducts } from "../dataProviders/products"; // Import getProducts
+import { searchProducts, getProducts } from "../dataProviders/products"; 
 import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
 
@@ -132,8 +132,8 @@ export default {
         priceMin: null,
         priceMax: null
       },
-      availableBrands: [], // Може да се попълни с наличните марки
-      availableProductTypes: ["Jewelry", "Electronics", "Watches", "Art", "Collectibles", "Coins & Currency", "Other"] // Можете да динамично заредите тези стойности
+      availableBrands: [],
+      availableProductTypes: ["Jewelry", "Electronics", "Watches", "Art", "Collectibles", "Coins & Currency", "Other"] 
     };
   },
   async created() {
@@ -167,9 +167,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * Извлича наличните марки за филтриране
-     */
     async fetchAvailableBrands() {
       const data = await getProducts("all-products");
       if (data && data.products) {
@@ -177,17 +174,12 @@ export default {
         this.availableBrands = Array.from(brandsSet);
       }
     },
-    /**
-     * Изпълнява търсенето с текущите параметри
-     */
     async performSearch() {
       const trimmedQuery = this.searchQuery.trim();
 
       if (trimmedQuery === "") {
-        // Ако търсенето е празно, не обновяваме 'q' в URL
         this.query = "";
       } else {
-        // Обновява URL с новите параметри
         this.$router.push({ name: "Search", query: { q: trimmedQuery } });
       }
 
@@ -218,17 +210,13 @@ export default {
 
       this.isLoading = false;
     },
-    /**
-     * Промяна на текущата страница
-     */
+
     async changePage(newPage) {
       if (newPage < 1 || newPage > this.pages) return;
       this.page = newPage;
       await this.performSearch();
     },
-    /**
-     * Ресетиране на всички филтри
-     */
+
     async resetFilters() {
       this.filters = {
         brand: "",
@@ -350,12 +338,11 @@ export default {
 /* Product Container Styles */
 .productContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 колони */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 1rem;
   justify-items: center;
 }
 
-/* Премахнете фиксираната ширина, за да позволите на Grid да контролира размера */
 .productd {
   display: flex;
   flex-direction: column-reverse;
@@ -364,10 +351,10 @@ export default {
   border: 1px solid #fff;
   background-color: rgb(233, 233, 233);
   border-radius: 10px;
-  margin: 1rem 0; /* Премахнете страничните маргини */
-  width: 100%; /* Пълна ширина на клетката */
-  max-width: 250px; /* Максимална ширина за по-добро разпределение */
-  height: 100%; /* Автоматична височина */
+  margin: 1rem 0; 
+  width: 100%; 
+  max-width: 250px; 
+  height: 100%;
 }
 
 .productImage {
@@ -384,7 +371,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   border-top: 1px solid black;
-  width: 90%; /* Намалете ширината за по-добро подравняване */
+  width: 90%; 
   height: 50%;
   padding: 1rem 0.25rem;
   position: relative;

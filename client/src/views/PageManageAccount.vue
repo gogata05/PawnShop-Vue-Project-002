@@ -41,44 +41,41 @@ import { ref, onMounted } from "vue";
 import { getProfile, logoutUser } from "../dataProviders/auth";
 import { useUserStore } from "../store/userStore";
 import axiosInstance from "../configs/axios";
-import { useRouter } from "vue-router"; // Импортирайте useRouter
+import { useRouter } from "vue-router";
 
 export default {
   name: "PageManageAccount",
   setup() {
     const userStore = useUserStore();
-    const router = useRouter(); // Дефинирайте router
+    const router = useRouter();
     const form = ref({
       firstName: "",
       lastName: "",
       email: "",
-      currentPassword: "", // Добавено за текуща парола
+      currentPassword: "",
       newPassword: "",
       confirmPassword: ""
     });
-    const originalEmail = ref(""); // Добавено за съхранение на оригиналния имейл
+    const originalEmail = ref("");
     const message = ref("");
     const error = ref("");
 
     onMounted(async () => {
-      // Заредете текущите данни на потребителя
       const profile = await getProfile();
       if (profile) {
         form.value.firstName = profile.firstName;
         form.value.lastName = profile.lastName;
         form.value.email = profile.email;
-        originalEmail.value = profile.email; // Съхранете оригиналния имейл
+        originalEmail.value = profile.email;
       }
     });
 
     const updateAccount = async () => {
-      // Проверка на текущата парола
       if (!form.value.currentPassword) {
         error.value = "Current password is required!";
         return;
       }
 
-      // Проверка на новата парола и потвърждение
       if (form.value.newPassword || form.value.confirmPassword) {
         if (form.value.newPassword !== form.value.confirmPassword) {
           error.value = "Passwords do not match!";
@@ -91,20 +88,19 @@ export default {
           firstName: form.value.firstName,
           lastName: form.value.lastName,
           email: form.value.email,
-          currentPassword: form.value.currentPassword, // Изпращане на текущата парола
-          ...(form.value.newPassword && { password: form.value.newPassword }) // Опционално нова парола
+          currentPassword: form.value.currentPassword,
+          ...(form.value.newPassword && { password: form.value.newPassword })
         });
         message.value = response.data.message;
         error.value = "";
 
-        // Проверете дали имейлът или паролата са променени
         const isEmailChanged = form.value.email !== originalEmail.value;
         const isPasswordChanged = !!form.value.newPassword;
 
         if (isEmailChanged || isPasswordChanged) {
           userStore.logout();
-          await logoutUser(); // Изчистете токена от сървъра
-          router.push("/user/login"); // Използвайте router вместо this.$router
+          await logoutUser();
+          router.push("/user/login");
         }
       } catch (err) {
         error.value = err.response.data.error || "An error occurred.";

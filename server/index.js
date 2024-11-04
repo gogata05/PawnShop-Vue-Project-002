@@ -16,9 +16,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 // CORS settings
-// app.use(cors({ credentials: true, origin: "http://localhost:5173" }));//for local
-app.use(cors({ credentials: true, origin: "https://pawn-shop-vue-project-002.vercel.app" })); //for vercel
-// app.use(cors({ credentials: true, origin: "*" }));//for all
+app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //for local
+// app.use(cors({ credentials: true, origin: "https://pawn-shop-vue-project-002.vercel.app" })); //for vercel
 
 // Routes
 app.use(auth);

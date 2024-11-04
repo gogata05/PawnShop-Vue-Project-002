@@ -7,7 +7,7 @@ import starsGenerator from "../helpers/starsGenerator";
 import { useUserStore } from "../store/userStore";
 import { mapState } from "pinia";
 import { useToast } from "vue-toastification";
-import { useCartStore } from "../store/cartStore"; // Добавено импортиране
+import { useCartStore } from "../store/cartStore"; 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 library.add(faHeart);
@@ -25,8 +25,8 @@ export default {
       isLoading: true,
       userData: { comment: "" },
       quantity: 1,
-      isFavorite: false, // Добавяме ново поле
-      showDeleteModal: false // Добавете в
+      isFavorite: false, 
+      showDeleteModal: false
     };
   },
   async created() {
@@ -41,17 +41,14 @@ export default {
     async loadData() {
       this.isLoading = true;
 
-      // Зареждаме запазения статус от localStorage
       const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
       const savedStatus = favoriteProducts[this.$route.params.id];
 
       this.productData = await getProduct(this.$route.params.id);
 
-      // Проверяваме дали текущият потребител е създател на продукта
       const userId = localStorage.getItem("id");
       this.productData.isOwnedBy = this.productData.product.creator._id === userId;
 
-      // Използваме запазения статус или статуса от сървъра
       this.productData.isInFavorites = savedStatus !== undefined ? savedStatus : this.productData.isInFavorites;
 
       this.isLoading = false;
@@ -89,15 +86,11 @@ export default {
         const response = await toggleFavorite(this.productData.product._id);
 
         if (response) {
-          // Обръщаме статуса локално
           this.productData.isInFavorites = !this.productData.isInFavorites;
-
-          // Актуализираме localStorage
           const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
           favoriteProducts[this.productData.product._id] = this.productData.isInFavorites;
           localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
 
-          // Актуализираме брояча в store
           this.userStore.favoritesCount = response.newCount;
 
           const message = this.productData.isInFavorites ? "Product added to favorites!" : "Product removed from favorites!";
@@ -143,9 +136,7 @@ export default {
       };
     }
   },
-  // Добавяме cleanup при унищожаване на компонента
   beforeUnmount() {
-    // Опционално: Изчистваме localStorage ако е необходимо
     // localStorage.removeItem("favoriteProducts");
   }
 };

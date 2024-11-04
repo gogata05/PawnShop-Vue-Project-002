@@ -53,7 +53,6 @@ export default {
           }));
           totalProducts.value = response.total;
 
-          // Събиране на уникални брандове и типове продукти
           availableBrands.value = [...new Set(response.products.map(p => p.brand))];
           availableProductTypes.value = [...new Set(response.products.map(p => p.productType))];
         }
@@ -75,18 +74,15 @@ export default {
       currentPage.value = 1;
     };
 
-    // Наблюдаване за промени във филтрите и сортирането
     watch([filters, sortBy, order], () => {
-      currentPage.value = 1; // Връщане на първа страница при промяна на филтрите
+      currentPage.value = 1;
       loadData();
     });
 
-    // Наблюдаване за промени в страницата
     watch(currentPage, () => {
       loadData();
     });
 
-    // Първоначално зареждане
     onMounted(() => {
       loadData();
     });

@@ -24,7 +24,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(useUserStore, ["login"]), // Променено от 'setProfile' на 'login'
+    ...mapActions(useUserStore, ["login"]),
 
     async onSubmit() {
       this.errorNotification = false;
@@ -37,7 +37,7 @@ export default {
           this.backendError = userData.error;
           this.errorNotification = true;
         } else {
-          this.login(userData); // Променено от 'setProfile' на 'login'
+          this.login(userData);
           this.$router.push("/all-products");
         }
         this.isLoading = false;
