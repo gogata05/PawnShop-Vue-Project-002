@@ -17,6 +17,7 @@ import PageCart from "../views/PageCart.vue";
 import PageSuccess from "../views/PageSuccess.vue";
 import PageOrders from "../views/PageOrders.vue";
 import PageFavorites from "../views/PageFavorites.vue";
+import PageServerError from "../views/PageServerError.vue";
 
 function validateUser() {
   const userStore = useUserStore();
@@ -121,6 +122,11 @@ const routes = [
     component: PageFavorites,
     meta: { requiresAuth: true }
   },
+  {
+    path: "/server-error",
+    component: PageServerError,
+    name: "ServerError"
+  },
   { path: "/:pathMatch(.*)*", component: PageNotFound, name: "404" }
 ];
 
@@ -130,6 +136,12 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
+  // Skip authentication checks if going to server error page
+  if (to.name === "ServerError") {
+    next();
+    return;
+  }
+
   const userStore = useUserStore();
 
   if (to.meta.requiresAuth) {

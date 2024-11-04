@@ -10,9 +10,12 @@ export default {
     PageHeader
   },
   async created() {
-    const userStore = useUserStore();
-    await userStore.getPersistedProfile();
-    console.log("App initialized, user state:", userStore.$state);
+    // Only try to get profile if we're not on the server error page
+    if (window.location.pathname !== "/server-error") {
+      const userStore = useUserStore();
+      await userStore.getPersistedProfile();
+      console.log("App initialized, user state:", userStore.$state);
+    }
   }
 };
 </script>

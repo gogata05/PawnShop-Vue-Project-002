@@ -15,6 +15,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import "./configs/fontawesome";
 import { faShoppingCart, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "./configs/axios";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -36,6 +37,19 @@ app.use(VueGoogleMaps, {
     key: import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   }
 });
+
+// Add global axios error interceptor
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    console.log("Axios error:", error);
+    if (error.response?.status === 500 || !error.response) {
+      console.log("Server error detected, redirecting...");
+      window.location.href = "/server-error";
+    }
+    return Promise.reject(error);
+  }
+);
 
 app.mount("#app");
 
