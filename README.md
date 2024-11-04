@@ -25,7 +25,8 @@ Features:
 - Home page recent added products Slider
 - Select your user type:Buyer or Pawn Shop //for Home page and Help page
 - state management Pinia // for Cart and User
-- Page 404
+- Page error 404
+- Page error 500
 - Help page // frequently asked questions
 - Footer links
 - Composition API
@@ -37,9 +38,9 @@ Post http://localhost:5000/seed or npm run seed
 
 ## Photos
 
-All Posts page sorting and ordering:
+All Posts page with sorting, ordering & start rating system:
 
-![image](/client/public/pics/AllProductsPage.png)
+![image](/client/public/pics/allProductsWithStarRatings.png)
 
 Recently Added Posts in Home page:
 
@@ -100,6 +101,14 @@ Help page:
 Error 404:
 
 ![image](/client/public/pics/404.png)
+
+Error 500:
+
+![image](/client/public/pics/error500.png)
+
+Footer and Pagination:
+
+![image](/client/public/pics/FooterAndPagination.png)
 
 Register page:
 

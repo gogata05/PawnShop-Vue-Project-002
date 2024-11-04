@@ -4,6 +4,7 @@
     <div class="container">
       <section class="footer-section">
         <ul class="footer-links">
+          <p class="section-title">Information</p>
           <li>
             <i :class="['fas', 'fa-phone', iconColors]" aria-hidden="true"></i>
             <p>Call +359 899 999 999</p>
@@ -27,12 +28,26 @@
         </ul>
 
         <div class="combined-links">
-          <router-link to="/all-products" class="hover-underline">All Products</router-link>
-          <router-link to="/top-10" class="hover-underline">Top 10 Products</router-link>
-          <router-link to="/favorites" class="hover-underline">My Favourites</router-link>
-          <router-link to="/add" class="hover-underline">Add Product</router-link>
+          <p class="section-title">Sort</p>
+          <a href="#" @click.prevent="handleSort('createdAt')" class="hover-underline">Newest</a>
+          <a href="#" @click.prevent="handleSort('price')" class="hover-underline">Price</a>
+          <a href="#" @click.prevent="handleSort('rating')" class="hover-underline">Rating</a>
         </div>
+
         <div class="combined-links">
+          <p class="section-title">Categories</p>
+          <a href="#" @click.prevent="handleCategory('')" class="hover-underline">All</a>
+          <a href="#" @click.prevent="handleCategory('Jewelry')" class="hover-underline">Jewelry</a>
+          <a href="#" @click.prevent="handleCategory('Electronics')" class="hover-underline">Electronics</a>
+          <a href="#" @click.prevent="handleCategory('Watches')" class="hover-underline">Watches</a>
+          <a href="#" @click.prevent="handleCategory('Art')" class="hover-underline">Art</a>
+          <!-- <a href="#" @click.prevent="handleCategory('Collectibles')" class="hover-underline">Collectibles</a> -->
+          <!-- <a href="#" @click.prevent="handleCategory('Coins & Currency')" class="hover-underline">Coins & Currency</a> -->
+          <a href="#" @click.prevent="handleCategory('Other')" class="hover-underline">Other</a>
+        </div>
+
+        <div class="combined-links">
+          <p class="section-title">Visit</p>
           <router-link to="/all-products" class="hover-underline">All Products</router-link>
           <router-link to="/top-10" class="hover-underline">Top 10 Products</router-link>
           <router-link to="/favorites" class="hover-underline">My Favourites</router-link>
@@ -72,6 +87,22 @@ export default {
     },
     iconColors() {
       return "text-white";
+    }
+  },
+  methods: {
+    handleSort(sortType) {
+      console.log("Handling sort:", sortType);
+      this.$router.push({
+        path: "/all-products",
+        query: { sortBy: sortType }
+      });
+    },
+    handleCategory(category) {
+      console.log("Handling category:", category);
+      this.$router.push({
+        path: "/all-products",
+        query: { productType: category }
+      });
     }
   }
 };
@@ -173,5 +204,11 @@ footer {
 .social-icons {
   display: flex;
   gap: 10px;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 1.1em;
 }
 </style>

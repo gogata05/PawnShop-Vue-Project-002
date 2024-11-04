@@ -67,10 +67,15 @@ const edit = (productId, brand, model, description, imgUrl, condition, year, pri
     { runValidators: true }
   );
 
-const comment = async (productId, comment) => {
+const comment = async (productId, commentData) => {
+  console.log("Adding comment:", commentData);
   let product = await getOne(productId);
   let addComments = product.comments;
-  addComments.unshift(comment);
+  addComments.unshift({
+    text: commentData.text,
+    author: commentData.author,
+    createdAt: new Date()
+  });
   await Product.updateOne(
     { _id: productId },
     {

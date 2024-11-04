@@ -150,6 +150,20 @@ export default {
       this.searchQuery = this.query;
       this.page = 1; // Reset to first page при промяна на търсене
       this.performSearch();
+    },
+    "$route.query": {
+      handler(newQuery) {
+        // Update filters based on URL parameters
+        if (newQuery.productType) {
+          this.filters.productType = newQuery.productType;
+        }
+        if (newQuery.sortBy) {
+          this.sortBy = newQuery.sortBy;
+        }
+        this.page = 1;
+        this.performSearch();
+      },
+      deep: true
     }
   },
   methods: {

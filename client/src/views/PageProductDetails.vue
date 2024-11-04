@@ -111,12 +111,25 @@ export default {
     async comment() {
       await comment(this.productData.product._id, this.userData);
       let user = await getProfile();
-      this.productData.product.comments.unshift(`${user.firstName} ${user.lastName}: ${this.userData.comment}`);
+      this.productData.product.comments.unshift({
+        text: this.userData.comment,
+        author: `${user.firstName} ${user.lastName}`,
+        createdAt: new Date()
+      });
       this.userData.comment = "";
     },
     addToCart() {
       const cartStore = useCartStore();
       cartStore.addToCart(this.productData.product, this.quantity);
+    },
+    formatDate(date) {
+      return new Date(date).toLocaleString("en-EN", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
   },
   computed: {
@@ -214,9 +227,13 @@ export default {
             </div>
             <div class="project-comment-box" id="commentsSection" v-if="productData.product.comments.length > 0">
               <h2 class="commentTitle">Comments:</h2>
-              <p class="comment" v-for="comment of productData.product.comments">
-                {{ comment }}
-              </p>
+              <div class="comment-container" v-for="comment in productData.product.comments" :key="comment.createdAt">
+                <div class="comment-header">
+                  <span class="comment-author">{{ comment.author }}</span>
+                  <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+                </div>
+                <p class="comment-text">{{ comment.text }}</p>
+              </div>
             </div>
             <div v-if="productData.product.comments.length == 0" class="project-comment-box">
               <h3>Be the first to comment this product!</h3>
@@ -335,6 +352,18 @@ h2 {
 .image-container {
   position: relative;
   width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-height: 500px;
+  max-width: 800px;
+  margin: 0 auto;
+  display: block;
 }
 
 .favorite-icon {
@@ -500,14 +529,13 @@ button,
   }
 
   .image-container {
-    max-width: 0%;
+    height: 400px;
+    max-width: 100%;
   }
 
   .image-container img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 5px;
+    max-height: 400px;
+    max-width: 600px;
   }
 
   .project-comment-box {
@@ -553,13 +581,12 @@ button,
   }
 
   .image-container {
-    min-width: 100%;
-    height: auto;
+    height: 300px;
   }
 
   .image-container img {
-    width: 100%;
-    height: auto;
+    max-height: 300px;
+    max-width: 100%;
   }
 
   textarea {
@@ -705,5 +732,83 @@ button,
   .modal-btn {
     width: 100%;
   }
+}
+
+.comment-container {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding-left: 0px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.comment-date {
+  color: #6c757d;
+  font-size: 0.9em;
+}
+
+.comment-text {
+  color: #2c3e50;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#wrapper {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 12px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.comment-btn {
+  background: #007bff;
+  transition: background-color 0.3s ease;
+}
+
+.comment-btn:hover {
+  background: #0056b3;
+}
+
+/* Добавете тези стилове в секцията <style scoped> */
+.mybuttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.mybuttons .dark-btn,
+.mybuttons .danger-btn {
+  width: 120px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 16px;
 }
 </style>

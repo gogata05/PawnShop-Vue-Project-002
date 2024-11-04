@@ -10,7 +10,12 @@ export async function loginUser(userData, type) {
     }
     return res.data;
   } catch (error) {
-    let backendError = error.response.data.error;
+    console.log("Login error:", error);
+    if (error.response?.status === 500 || !error.response) {
+      window.location.href = "/server-error";
+      return;
+    }
+    let backendError = error.response?.data?.error;
     return { error: backendError };
   }
 }

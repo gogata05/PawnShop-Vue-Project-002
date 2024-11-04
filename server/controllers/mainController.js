@@ -182,9 +182,12 @@ router.post("/comment/:id", isAuth, async (req, res) => {
   }
   let productId = req.params.id;
   let user = await authServices.getUserById(req.user._id);
-  let userComment = `${user.firstName} ${user.lastName}: ${comment.trim()}`;
+  
   try {
-    await productServices.comment(productId, userComment);
+    await productServices.comment(productId, {
+      text: comment.trim(),
+      author: `${user.firstName} ${user.lastName}`
+    });
 
     res.json({ message: "Comment added successfully!" });
   } catch (error) {

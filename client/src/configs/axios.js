@@ -14,4 +14,19 @@ axiosInstance.interceptors.request.use(config => {
   return config;
 });
 
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    console.log("Axios error:", error);
+    if (error.response?.status === 500 || !error.response) {
+      console.log("Server error detected");
+      if (window.location.pathname !== "/server-error") {
+        console.log("Redirecting to server error page...");
+        window.location.href = "/server-error";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;

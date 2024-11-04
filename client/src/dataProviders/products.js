@@ -21,6 +21,10 @@ export async function getProducts(params = {}) {
     return res.data;
   } catch (error) {
     console.error("Error fetching products:", error);
+    if (error.response?.status === 500 || !error.response) {
+      window.location.href = "/server-error";
+      return;
+    }
     return null;
   }
 }
