@@ -17,7 +17,8 @@ app.use(express.json());
 
 // Настройка на CORS с общ достъп
 // app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-app.use(cors({ credentials: true, origin: "*" }));
+app.use(cors({ credentials: true, origin: "https://pawn-shop-vue-project-002.vercel.app/" }));
+// app.use(cors({ credentials: true, origin: "*" }));
 
 // Routes
 app.use(auth);
