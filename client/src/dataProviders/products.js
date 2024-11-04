@@ -22,7 +22,7 @@ export async function getProducts(params = {}) {
   } catch (error) {
     console.error("Error fetching products:", error);
     if (error.response?.status === 500 || !error.response) {
-      window.location.href = "/server-error";
+      // window.location.href = "/server-error";
       return;
     }
     return null;
@@ -33,14 +33,14 @@ export async function getProduct(id) {
   try {
     console.log("Fetching product details for ID:", id);
     const res = await axiosInstance.get(`/details/${id}`);
-    
+
     // Запазваме статуса в localStorage
     if (res.data.isInFavorites !== undefined) {
       const favoriteProducts = JSON.parse(localStorage.getItem("favoriteProducts") || "{}");
       favoriteProducts[id] = res.data.isInFavorites;
       localStorage.setItem("favoriteProducts", JSON.stringify(favoriteProducts));
     }
-    
+
     console.log("Product details response:", res.data);
     return res.data;
   } catch (error) {

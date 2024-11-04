@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
     console.log("Axios error:", error);
     if (error.response?.status === 500 || !error.response) {
       console.log("Server error detected, redirecting...");
-      window.location.href = "/server-error";
+      // window.location.href = "/server-error";
     }
     return Promise.reject(error);
   }

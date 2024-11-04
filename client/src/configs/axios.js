@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
       console.log("Server error detected");
       if (window.location.pathname !== "/server-error") {
         console.log("Redirecting to server error page...");
-        window.location.href = "/server-error";
+        // window.location.href = "/server-error";
       }
     }
     return Promise.reject(error);

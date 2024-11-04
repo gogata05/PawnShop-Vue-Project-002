@@ -12,7 +12,7 @@ export async function loginUser(userData, type) {
   } catch (error) {
     console.log("Login error:", error);
     if (error.response?.status === 500 || !error.response) {
-      window.location.href = "/server-error";
+      // window.location.href = "/server-error";
       return;
     }
     let backendError = error.response?.data?.error;
