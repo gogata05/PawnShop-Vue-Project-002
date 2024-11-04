@@ -7,6 +7,20 @@ How to Start:
 2."npm start" on server terminal location
 3."npm run dev" on client terminal location
 
+add 2 .env files in client and server:
+
+```
+# server\.env
+PORT=5000
+DB_CONNECTION_STRING=yourConnectionString
+```
+
+```
+# client\.env
+VITE_GOOGLE_MAPS_API_KEY=yourGoogleMapsIPkey
+VITE_BASE_URL=http://localhost:5000
+```
+
 Features:
 
 - Find us google maps
