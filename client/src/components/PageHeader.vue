@@ -206,12 +206,6 @@ header nav ul li {
   list-style: none;
 }
 header nav ul li a:hover,
-.welcome a:hover {
-  color: #fff;
-  border-bottom: 1px solid #fff;
-  padding-bottom: 8px;
-  transition: all 0.2s ease;
-}
 header nav ul {
   display: flex;
   gap: 1.75rem;
