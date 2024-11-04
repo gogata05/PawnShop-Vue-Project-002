@@ -1,5 +1,5 @@
 // server\index.js
-require("dotenv").config(); // Зареждане на .env файловете
+require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const cors = require("cors");
@@ -15,10 +15,10 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 
-// Настройка на CORS с общ достъп
-// app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-app.use(cors({ credentials: true, origin: "https://pawn-shop-vue-project-002.vercel.app" }));
-// app.use(cors({ credentials: true, origin: "*" }));
+// CORS settings
+// app.use(cors({ credentials: true, origin: "http://localhost:5173" }));//for local
+app.use(cors({ credentials: true, origin: "https://pawn-shop-vue-project-002.vercel.app" })); //for vercel
+// app.use(cors({ credentials: true, origin: "*" }));//for all
 
 // Routes
 app.use(auth);
@@ -35,10 +35,10 @@ app.post("/seed", async (req, res) => {
   }
 });
 
-// Инициализиране на базата данни и стартиране на сървъра
+// Database initialization and server start
 initDatabase(process.env.DB_CONNECTION_STRING)
   .then(() => {
-    const PORT = process.env.PORT;
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server is listening at http://localhost:${PORT}`);
     });
@@ -47,7 +47,7 @@ initDatabase(process.env.DB_CONNECTION_STRING)
     console.error("Failed to connect to the database:", err);
   });
 
-// Тестов маршрут
+// Test route
 app.get("/", (req, res) => {
   res.json({ text: "Server is online!" });
 });
