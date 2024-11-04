@@ -1,7 +1,5 @@
-// server\index.js
 require("dotenv").config(); // Зареждане на .env файловете
 const cookieParser = require("cookie-parser");
-const config = require("./config/config")[process.env.NODE_ENV || "development"];
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
@@ -15,7 +13,9 @@ const app = express();
 // Middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Заменете origin, ако е необходимо
+
+// Настройка на CORS с общ достъп
+app.use(cors({ credentials: true, origin: "*" }));
 
 // Routes
 app.use(auth);
@@ -33,9 +33,9 @@ app.post("/seed", async (req, res) => {
 });
 
 // Инициализиране на базата данни и стартиране на сървъра
-initDatabase(config.DB_CONNECTION_STRING) // Използва конфигурацията от config.js
+initDatabase(process.env.DB_CONNECTION_STRING)
   .then(() => {
-    const PORT = config.PORT || 5000; // Задайте порта да вземе от конфигурацията
+    const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server is listening at http://localhost:${PORT}`);
     });
