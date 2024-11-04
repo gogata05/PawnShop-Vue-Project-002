@@ -17,9 +17,7 @@
               <font-awesome-icon icon="plus" />
             </button>
           </div>
-          <button class="remove-btn" @click="removeItem(item.product._id)">
-            <font-awesome-icon icon="trash" /> Remove
-          </button>
+          <button class="remove-btn" @click="removeItem(item.product._id)"><font-awesome-icon icon="trash" /> Remove</button>
         </div>
       </div>
       <div class="order-summary">
@@ -31,12 +29,10 @@
           </div>
           <div class="summary-row">
             <span>Total Price:</span>
-            <span class="total-price">€{{ totalPrice }}</span>
+            <span class="total-price">€{{ totalPrice.toFixed(2) }}</span>
           </div>
         </div>
-        <button class="checkout-btn" @click="checkout">
-          Proceed to Checkout
-        </button>
+        <button class="checkout-btn" @click="checkout">Proceed to Checkout</button>
       </div>
     </div>
     <div v-else>
@@ -109,10 +105,12 @@ export default {
 <style scoped>
 .cart-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 70px auto;
   padding: 40px 20px;
   background-color: #f8f9fa;
   min-height: 80vh;
+  /* zoom out the page */
+  /* transform: scale(0.97); */
 }
 
 .cart-item {
@@ -227,7 +225,7 @@ export default {
 .checkout-btn {
   width: 100%;
   padding: 15px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 8px;
@@ -245,17 +243,17 @@ export default {
   .cart-item {
     flex-direction: column;
   }
-  
+
   .cart-item img {
     width: 100%;
     height: 200px;
     margin-bottom: 20px;
   }
-  
+
   .item-details {
     margin-left: 0;
   }
-  
+
   .order-summary {
     margin: 30px auto;
   }
