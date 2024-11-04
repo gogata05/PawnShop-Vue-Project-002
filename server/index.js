@@ -1,7 +1,7 @@
 // server\index.js
-require("dotenv").config(); // Добавете това
+require("dotenv").config(); // Зареждане на .env файловете
 const cookieParser = require("cookie-parser");
-const config = require("./config/config")[process.env.NODE_ENV];
+const config = require("./config/config")[process.env.NODE_ENV || "development"];
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
@@ -9,15 +9,20 @@ const initDatabase = require("./config/database");
 const { auth } = require("./middlewares/authMiddleware");
 const orderController = require("./controllers/orderController");
 const { seedDatabase } = require("./config/seedData");
+
 const app = express();
+
+// Middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "http://localhost:5173" })); // Заменете origin, ако е необходимо
+
+// Routes
 app.use(auth);
 app.use(routes);
 app.use("/orders", orderController);
 
-// Add this route for seeding
+// Route for seeding database
 app.post("/seed", async (req, res) => {
   try {
     const result = await seedDatabase();
@@ -27,14 +32,19 @@ app.post("/seed", async (req, res) => {
   }
 });
 
-initDatabase(process.env.DB_CONNECTION_STRING) // Променете тук
+// Инициализиране на базата данни и стартиране на сървъра
+initDatabase(config.DB_CONNECTION_STRING) // Използва конфигурацията от config.js
   .then(() => {
-    app.listen(process.env.PORT, console.log(`Listening at http://localhost:${process.env.PORT}`)); // Променете тук
+    const PORT = config.PORT || 5000; // Задайте порта да вземе от конфигурацията
+    app.listen(PORT, () => {
+      console.log(`Server is listening at http://localhost:${PORT}`);
+    });
   })
   .catch(err => {
-    console.error(err);
+    console.error("Failed to connect to the database:", err);
   });
 
+// Тестов маршрут
 app.get("/", (req, res) => {
   res.json({ text: "Server is online!" });
 });
