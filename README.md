@@ -3,11 +3,14 @@
 SoftUni Project Defense
 
 How to Start:
+
 1."npm install" on both server and clint terminal location
+
 2."npm start" on server terminal location
+
 3."npm run dev" on client terminal location
 
-add 2 .env files in client and server:
+4.Also Add 2 .env files in client and server before starting the app:
 
 ```
 # server\.env
@@ -47,7 +50,7 @@ Features:
 - Star Rating
 - Seed Data Products
 
-add seed data:
+How to add seed data:
 Post http://localhost:5000/seed or npm run seed
 
 ## Photos
