@@ -48,6 +48,29 @@
         </div>
       </div>
     </div>
+
+    <div v-else class="empty-cart">
+      <div class="empty-cart-content">
+        <div class="empty-cart-icon">
+          <font-awesome-icon icon="shopping-cart" />
+        </div>
+        <h2>Your Cart is Empty</h2>
+        <p>Looks like you haven't added anything to your cart yet</p>
+        <router-link to="/all-products" class="start-shopping-btn">
+          <font-awesome-icon icon="arrow-left" />
+          Start Shopping
+        </router-link>
+
+        <!-- <div class="suggestions">
+          <h3>You might be interested in</h3>
+          <div class="suggestion-links">
+            <router-link to="/top-10">Top 10</router-link>
+            <router-link to="/all-products">All Products</router-link>
+            <router-link to="/all-products">New Arrivals</router-link>
+          </div>
+        </div> -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -300,6 +323,107 @@ export default {
   gap: 6px;
 }
 
+.empty-cart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+}
+
+.empty-cart-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-cart-icon {
+  font-size: 5rem;
+  color: #e2e8f0;
+  margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.empty-cart h2 {
+  font-size: 1.8rem;
+  color: #2d3748;
+  margin-bottom: 12px;
+}
+
+.empty-cart p {
+  color: #718096;
+  font-size: 1.1rem;
+  margin-bottom: 32px;
+}
+
+.start-shopping-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.start-shopping-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.suggestions {
+  margin-top: 40px;
+  padding-top: 30px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.suggestions h3 {
+  font-size: 1.2rem;
+  color: #4a5568;
+  margin-bottom: 16px;
+}
+
+.suggestion-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.suggestion-links a {
+  color: #4a5568;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #f7fafc;
+  transition: all 0.2s;
+}
+
+.suggestion-links a:hover {
+  background: #edf2f7;
+  color: #2d3748;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 1024px) {
   .cart-layout {
     grid-template-columns: 1fr 320px;
@@ -314,6 +438,25 @@ export default {
   .summary-sticky {
     position: static;
     margin-top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .empty-cart-content {
+    padding: 30px 20px;
+  }
+
+  .empty-cart-icon {
+    font-size: 4rem;
+  }
+
+  .empty-cart h2 {
+    font-size: 1.5rem;
+  }
+
+  .suggestion-links {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 </style>
