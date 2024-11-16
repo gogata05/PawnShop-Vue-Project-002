@@ -26,7 +26,13 @@ app.component("font-awesome-icon", FontAwesomeIcon);
 
 app.use(router);
 app.use(pinia);
-app.use(Toast);
+app.use(Toast, {
+  timeout: 1000, // 1 second duration
+  position: "top-right",
+  transition: "Vue-Toastification__bounce",
+  maxToasts: 3,
+  newestOnTop: true
+});
 const userStore = useUserStore();
 userStore.getPersistedProfile();
 

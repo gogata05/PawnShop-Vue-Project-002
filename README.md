@@ -116,6 +116,10 @@ Details:
 
 ![image](/client/public/pics/DetailspagewithLikesandDislikes.png)
 
+Order Summary with Shipping Details:
+
+![image](/client/public/pics/Order-Summary.png)
+
 Orders:
 
 ![image](/client/public/pics/OrdersPage.png)

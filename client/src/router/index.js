@@ -17,6 +17,7 @@ import PageCart from "../views/PageCart.vue";
 import PageSuccess from "../views/PageSuccess.vue";
 import PageOrders from "../views/PageOrders.vue";
 import PageFavorites from "../views/PageFavorites.vue";
+import PageOrderSummary from "../views/PageOrderSummary.vue";
 // import PageServerError from "../views/PageServerError.vue";
 
 function validateUser() {
@@ -120,6 +121,12 @@ const routes = [
     path: "/favorites",
     name: "Favorites",
     component: PageFavorites,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/order-summary",
+    name: "OrderSummary",
+    component: () => import("../views/PageOrderSummary.vue"),
     meta: { requiresAuth: true }
   },
   // {

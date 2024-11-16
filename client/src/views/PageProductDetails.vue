@@ -93,12 +93,16 @@ export default {
 
           this.userStore.favoritesCount = response.newCount;
 
-          const message = this.productData.isInFavorites ? "Product added to favorites!" : "Product removed from favorites!";
-          this.toast.success(message);
+          this.toast.success(
+            this.productData.isInFavorites 
+              ? "Added to favorites!" 
+              : "Removed from favorites!", 
+            { timeout: 1000 }
+          );
         }
       } catch (error) {
         console.error("Error toggling favorite:", error);
-        this.toast.error("Failed to update favorites");
+        this.toast.error("Failed to update favorites", { timeout: 1000 });
       }
     },
     async comment() {
@@ -114,6 +118,7 @@ export default {
     addToCart() {
       const cartStore = useCartStore();
       cartStore.addToCart(this.productData.product, this.quantity);
+      this.toast.success("Added to cart!", { timeout: 1000 });
     },
     formatDate(date) {
       return new Date(date).toLocaleString("en-EN", {

@@ -4,22 +4,77 @@ const router = express.Router();
 const { isAuth } = require("../middlewares/authMiddleware");
 const Order = require("../models/Order");
 const { errorHandler } = require("../middlewares/errorHandler");
+const Product = require("../models/Product");
 
-router.post("/create", isAuth, async (req, res) => {
+// Create order summary
+router.post("/create-summary", isAuth, async (req, res) => {
   try {
-    const { items, total } = req.body;
+    console.log("Creating order summary");
+    const { items } = req.body;
     const userId = req.user._id;
 
-    const newOrder = new Order({
+    // Calculate estimated delivery dates (7-14 days from now)
+    const today = new Date();
+    const deliveryStart = new Date(today.setDate(today.getDate() + 7));
+    const deliveryEnd = new Date(today.setDate(today.getDate() + 7));
+
+    // Calculate total
+    let total = 0;
+    const populatedItems = await Promise.all(
+      items.map(async item => {
+        const product = await Product.findById(item.product);
+        if (!product) {
+          throw new Error("Product not found");
+        }
+        total += product.price * item.quantity;
+        return {
+          productName: `${product.brand} ${product.model}`,
+          quantity: item.quantity,
+          price: product.price
+        };
+      })
+    );
+
+    console.log("Order summary created with total:", total);
+
+    res.json({
+      items: populatedItems,
+      total,
+      estimatedDeliveryStart: deliveryStart,
+      estimatedDeliveryEnd: deliveryEnd
+    });
+  } catch (error) {
+    console.error("Error creating order summary:", error);
+    res.status(500).json({ error: errorHandler(error) });
+  }
+});
+
+// Create final order with shipping details
+router.post("/create", isAuth, async (req, res) => {
+  try {
+    console.log("Creating final order");
+    const { shippingDetails, items, total } = req.body;
+    const userId = req.user._id;
+
+    const today = new Date();
+    const deliveryStart = new Date(today.setDate(today.getDate() + 7));
+    const deliveryEnd = new Date(today.setDate(today.getDate() + 7));
+
+    const order = new Order({
       user: userId,
       items,
-      total
+      shippingDetails,
+      total,
+      estimatedDeliveryStart: deliveryStart,
+      estimatedDeliveryEnd: deliveryEnd
     });
 
-    await newOrder.save();
+    await order.save();
+    console.log("Order created successfully:", order._id);
 
-    res.json({ message: "Order created successfully!", orderId: newOrder._id });
+    res.json({ order });
   } catch (error) {
+    console.error("Error creating order:", error);
     res.status(400).json({ error: errorHandler(error) });
   }
 });
