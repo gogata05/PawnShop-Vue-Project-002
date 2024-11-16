@@ -16,6 +16,10 @@ How to Start:
 # server\.env
 PORT=5000
 DB_CONNECTION_STRING=yourConnectionString
+
+STRIPE_SECRET_KEY=YourStripeSecretKey
+STRIPE_SUCCESS_URL=http://localhost:5173/success
+STRIPE_CANCEL_URL=http://localhost:5173/cart
 ```
 
 ```
