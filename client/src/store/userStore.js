@@ -3,16 +3,24 @@ import { defineStore } from "pinia";
 import { getProfile } from "../dataProviders/auth";
 
 export const useUserStore = defineStore("user", {
-  state: () => ({
-    isAuthenticated: false,
-    id: null,
-    email: "",
-    firstName: "",
-    lastName: "",
-    favoritesCount: 0,
-    token: localStorage.getItem("token") || null,
-    isLoading: false
-  }),
+  state: () => {
+    // Initialize state from localStorage immediately
+    const token = localStorage.getItem("token");
+    const savedEmail = localStorage.getItem("userEmail") || "";
+    const savedFirstName = localStorage.getItem("userFirstName") || "";
+    const savedLastName = localStorage.getItem("userLastName") || "";
+    
+    return {
+      isAuthenticated: !!token,
+      id: localStorage.getItem("id") || null,
+      email: savedEmail,
+      firstName: savedFirstName,
+      lastName: savedLastName,
+      favoritesCount: parseInt(localStorage.getItem("favoritesCount") || "0"),
+      token: token,
+      isLoading: false
+    };
+  },
   actions: {
     async getPersistedProfile() {
       console.log("Getting persisted profile");
@@ -28,9 +36,16 @@ export const useUserStore = defineStore("user", {
             this.firstName = profile.firstName;
             this.lastName = profile.lastName;
             this.favoritesCount = profile.favorites?.length || 0;
+            
+            // Save to localStorage
+            localStorage.setItem("userEmail", profile.email);
+            localStorage.setItem("userFirstName", profile.firstName);
+            localStorage.setItem("userLastName", profile.lastName);
+            localStorage.setItem("favoritesCount", profile.favorites?.length || 0);
           }
         } catch (error) {
           console.error("Error getting persisted profile:", error);
+          this.logout(); // Logout on error
         } finally {
           this.isLoading = false;
         }
@@ -77,9 +92,15 @@ export const useUserStore = defineStore("user", {
       this.lastName = "";
       this.favoritesCount = 0;
       this.token = null;
+      
+      // Clear all localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("id");
       localStorage.removeItem("favoriteProducts");
+      localStorage.removeItem("userEmail");
+      localStorage.removeItem("userFirstName");
+      localStorage.removeItem("userLastName");
+      localStorage.removeItem("favoritesCount");
     }
   }
 });

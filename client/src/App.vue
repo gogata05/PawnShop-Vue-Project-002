@@ -10,11 +10,20 @@ export default {
     PageHeader
   },
   async created() {
-    // Only try to get profile if we're not on the server error page
     if (window.location.pathname !== "/server-error") {
       const userStore = useUserStore();
-      await userStore.getPersistedProfile();
-      console.log("App initialized, user state:", userStore.$state);
+      
+      // Check if we have a token first
+      const token = localStorage.getItem("token");
+      if (token) {
+        console.log("Token found, initializing user state");
+        // Set initial state from localStorage
+        userStore.isAuthenticated = true;
+        userStore.email = localStorage.getItem("userEmail") || "";
+        
+        // Then fetch fresh data
+        await userStore.getPersistedProfile();
+      }
     }
   }
 };

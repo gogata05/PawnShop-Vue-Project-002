@@ -28,7 +28,7 @@
       <div class="user-info" @click="toggleDropdown">
         <span>Welcome, </span>
         <span v-if="isLoading">Loading...</span>
-        <span v-else class="email">{{ email }}</span>
+        <span v-else class="email">{{ email || localStorage.getItem("userEmail") }}</span>
       </div>
       <div class="favorites-icon" @click="goToFavorites">
         <font-awesome-icon :icon="['far', 'heart']" :class="{ active: isInFavoritesPage }" />
@@ -98,8 +98,7 @@ export default {
 
     const isAuthenticated = computed(() => userStore.isAuthenticated);
     const email = computed(() => {
-      console.log("Current email value:", userStore.email);
-      return userStore.email;
+      return userStore.email || localStorage.getItem("userEmail");
     });
     const itemCount = computed(() => cartStore.itemCount);
     const isCartPage = computed(() => route.name === "Cart");
