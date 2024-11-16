@@ -8,6 +8,7 @@ const initDatabase = require("./config/database");
 const { auth } = require("./middlewares/authMiddleware");
 const orderController = require("./controllers/orderController");
 const { seedDatabase } = require("./config/seedData");
+const stripeController = require("./controllers/stripeController");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" })); //for loc
 app.use(auth);
 app.use(routes);
 app.use("/orders", orderController);
+app.use("/stripe", stripeController);
 
 // Route for seeding database
 app.post("/seed", async (req, res) => {
