@@ -325,6 +325,7 @@ export default {
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  /* margin-top: 28px; */
 }
 
 .pagination button:disabled {

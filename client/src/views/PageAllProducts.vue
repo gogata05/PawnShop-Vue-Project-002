@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { searchProducts, getProducts } from "../dataProviders/products"; 
+import { searchProducts, getProducts } from "../dataProviders/products";
 import Loader from "../components/Loader.vue";
 import starsGenerator from "../helpers/starsGenerator";
 
@@ -133,7 +133,7 @@ export default {
         priceMax: null
       },
       availableBrands: [],
-      availableProductTypes: ["Jewelry", "Electronics", "Watches", "Art", "Collectibles", "Coins & Currency", "Other"] 
+      availableProductTypes: ["Jewelry", "Electronics", "Watches", "Art", "Collectibles", "Coins & Currency", "Other"]
     };
   },
   async created() {
@@ -260,6 +260,7 @@ export default {
   align-items: center;
   gap: 10px;
   margin: 20px 0;
+  padding-top: 58px;
 }
 
 .pagination button {
@@ -338,7 +339,7 @@ export default {
 /* Product Container Styles */
 .productContainer {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   justify-items: center;
 }
@@ -351,9 +352,9 @@ export default {
   border: 1px solid #fff;
   background-color: rgb(233, 233, 233);
   border-radius: 10px;
-  margin: 1rem 0; 
-  width: 100%; 
-  max-width: 250px; 
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 250px;
   height: 100%;
 }
 
@@ -371,7 +372,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   border-top: 1px solid black;
-  width: 90%; 
+  width: 90%;
   height: 50%;
   padding: 1rem 0.25rem;
   position: relative;
