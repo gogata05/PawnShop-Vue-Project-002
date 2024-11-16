@@ -79,11 +79,13 @@ import { useCartStore } from "../store/cartStore";
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import axiosInstance from "../configs/axios";
+import { useToast } from "vue-toastification";
 
 export default {
   setup() {
     const cartStore = useCartStore();
     const router = useRouter();
+    const toast = useToast();
 
     const cartItems = computed(() => cartStore.items);
     const totalItems = computed(() => cartStore.itemCount);
@@ -91,17 +93,20 @@ export default {
 
     const removeItem = productId => {
       cartStore.removeFromCart(productId);
+      toast.success("Product removed from cart!", { timeout: 1000 });
     };
 
     const increaseQuantity = productId => {
       const item = cartStore.items.find(item => item.product._id === productId);
       cartStore.updateQuantity(productId, item.quantity + 1);
+      // toast.info("Quantity increased!", { timeout: 1000 });
     };
 
     const decreaseQuantity = productId => {
       const item = cartStore.items.find(item => item.product._id === productId);
       if (item.quantity > 1) {
         cartStore.updateQuantity(productId, item.quantity - 1);
+        // toast.info("Quantity decreased!", { timeout: 1000 });
       }
     };
 
@@ -118,7 +123,6 @@ export default {
         window.location.href = response.data.url;
       } catch (error) {
         console.error("Checkout error:", error);
-       
       }
     };
 

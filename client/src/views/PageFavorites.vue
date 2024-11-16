@@ -66,25 +66,17 @@ export default {
 
     const addToCart = product => {
       cartStore.addToCart(product, 1);
+      toast.success("Added to cart!", { timeout: 1000 });
     };
 
     const removeFromFavorites = async productId => {
       try {
-        console.log("Starting removal process for product:", productId);
-        const response = await axiosInstance.delete(`/products/favorites/${productId}`);
-        console.log("Server response:", response.data);
-        
-        if (response.data.message) {
-          favorites.value = favorites.value.filter(product => product._id !== productId);
-          userStore.favoritesCount = favorites.value.length;
-          
-          console.log("Product removed successfully");
-        }
+        await toggleFavorite(productId);
+        await loadFavorites();
+        toast.success("Removed from favorites!", { timeout: 1000 });
       } catch (error) {
         console.error("Error in removeFromFavorites:", error);
-        if (error.response) {
-          console.error("Error details:", error.response.data);
-        }
+        toast.error("Failed to remove from favorites", { timeout: 1000 });
       }
     };
 
