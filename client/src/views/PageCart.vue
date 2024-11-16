@@ -107,18 +107,18 @@ export default {
 
     const checkout = async () => {
       try {
-        const orderData = {
-          items: cartItems.value.map(item => ({
-            product: item.product._id,
-            quantity: item.quantity
-          })),
-          total: totalPrice.value
-        };
-        await axiosInstance.post("/orders/create", orderData);
-        cartStore.clearCart();
-        router.push({ name: "Success" });
+        console.log("Starting checkout process");
+        const response = await axiosInstance.post("/stripe/create-checkout-session", {
+          items: cartItems.value
+        });
+
+        console.log("Stripe session created:", response.data);
+
+        // Redirect to Stripe Checkout
+        window.location.href = response.data.url;
       } catch (error) {
-        console.error(error);
+        console.error("Checkout error:", error);
+       
       }
     };
 
