@@ -110,20 +110,9 @@ export default {
       }
     };
 
-    const checkout = async () => {
-      try {
-        console.log("Starting checkout process");
-        const response = await axiosInstance.post("/stripe/create-checkout-session", {
-          items: cartItems.value
-        });
-
-        console.log("Stripe session created:", response.data);
-
-        // Redirect to Stripe Checkout
-        window.location.href = response.data.url;
-      } catch (error) {
-        console.error("Checkout error:", error);
-      }
+    const checkout = () => {
+      console.log("Redirecting to order summary");
+      router.push("/order-summary");
     };
 
     return {
