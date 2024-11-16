@@ -26,22 +26,23 @@ VITE_BASE_URL=http://localhost:5000
 
 Features:
 
-- Find us google maps
+- Find us page with Google Maps
+- Stripe Payment
 - Shopping Cart
 - Order functionality
 - Notifications
-- spinner
+- Spinner
 - Product Searcher
 - Search sorting
 - Search filters
-- pagination
+- Pagination
 - Likes,Dislikes
 - Comments
 - Favorites
 - Change Account information //change password/email/first name/last name
 - Home page recent added products Slider
 - Select your user type:Buyer or Pawn Shop //for Home page and Help page
-- state management Pinia // for Cart and User
+- State management Pinia // for Cart and User
 - Page error 404
 - Page error 500
 - Help page // frequently asked questions
@@ -55,13 +56,17 @@ Post http://localhost:5000/seed or npm run seed
 
 ## Photos
 
-All Posts page with sorting, ordering & start rating system:
+All Posts page with sorting, ordering & star rating system:
 
 ![image](/client/public/pics/allProductsWithStarRatings.png)
 
 Recently Added Posts in Home page:
 
 ![image](/client/public/pics/Home1.png)
+
+Stripe Payment:
+
+![image](/client/public/pics/Stripe_Payment.png)
 
 Google Maps Find Us 1:
 
